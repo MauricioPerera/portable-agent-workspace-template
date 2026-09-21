@@ -52,6 +52,12 @@ python scripts/check_first_run.py
 
 Para repetir su diagnóstico después de cambios: `python scripts/first_run.py`. Las pruebas estructurales no certifican la veracidad de documentos ni ausencia de secretos. Consulta la [especificación](WORKSPACE-SPEC.md) para los límites exactos.
 
+## Caso de uso: un negocio con varios proyectos
+
+Una instancia puede alojar proyectos de ventas, gastos y seguimiento. En una prueba con GLM, el agente combinó sus datos en un informe mensual y, en una sesión nueva, añadió una venta y trasladó el informe conservando los originales. Las cifras y el recálculo se verificaron independientemente.
+
+Lee el [caso documentado, método, evidencia y límites](docs/casos/negocio-glm.md). Se probó el scaffold local con datos ficticios; las herramientas del ejemplo se generaron en una instancia independiente y no vienen incluidas en la plantilla.
+
 ## Mantener la plantilla
 
 Este repositorio es el **distribuidor**. «Use this template» copia el distribuidor, no reemplaza el paso de inicialización. Su web, tests y workflows no se copian a la instancia. Los datos y ejemplos de dominio viven en repositorios independientes.

@@ -15,7 +15,7 @@
     <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
     <header class="site-header shell">
       <a class="brand" href="#inicio" aria-label="Portable Agent Workspace, inicio"><span class="brand-mark">[ ]</span><span>portable workspace</span></a>
-      <nav aria-label="Navegación principal"><a href="#modelo">Modelo</a><a href="#empezar">Empezar</a><a href="#prompt">Prompt</a></nav>
+      <nav aria-label="Navegación principal"><a href="#modelo">Modelo</a><a href="#caso-de-uso">Caso de uso</a><a href="#empezar">Empezar</a><a href="#prompt">Prompt</a></nav>
       <a class="header-link" href="https://github.com/MauricioPerera/portable-agent-workspace-template">GitHub <span aria-hidden="true">↗</span></a>
     </header>
     <main id="inicio">
@@ -42,6 +42,16 @@
           <article class="start-card"><span class="card-label">Técnico</span><h3>Con el scaffold</h3><p>Desde la distribución, un comando genera y valida tu instancia con Python 3.10 o posterior.</p><code>python scripts/init_workspace.py</code></article>
           <article class="start-card"><span class="card-label">Distribución</span><h3>Desde GitHub</h3><p>Copia la plantilla y ejecuta su scaffold. La instancia de trabajo queda separada de la web y los tests.</p><a href="https://github.com/MauricioPerera/portable-agent-workspace-template/generate">Use this template <span aria-hidden="true">→</span></a></article>
         </div>
+      </section>
+      <section class="start shell" id="caso-de-uso" aria-labelledby="use-case-title">
+        <div class="section-heading"><p class="kicker">Caso de uso probado con GLM</p><h2 id="use-case-title">Tu negocio, varios proyectos y una misma IA.</h2><p>Organiza ventas, gastos y seguimiento dentro del workspace. Pide a tu IA que combine sus datos, actualice un informe o lo mueva a otro proyecto conservando los originales.</p></div>
+        <div class="start-grid">
+          <article class="start-card"><span class="card-label">01 · Organizar</span><h3>Un proyecto por necesidad</h3><p>GLM creó proyectos separados de ventas y gastos con datos ficticios y preservó los archivos recibidos.</p></article>
+          <article class="start-card"><span class="card-label">02 · Combinar</span><h3>Un resumen entre proyectos</h3><p>Generó un informe mensual que lee ambos proyectos y calcula ventas, gastos y diferencia, con un script para actualizarlo.</p></article>
+          <article class="start-card"><span class="card-label">03 · Continuar</span><h3>Retomar desde los archivos</h3><p>En una sesión nueva añadió una venta y trasladó el informe y su script al proyecto de seguimiento, actualizando sus referencias.</p></article>
+        </div>
+        <p>Las cifras, el recálculo y la conservación de originales se comprobaron de forma independiente. Prueba con la versión 0.4.0 mediante scaffold local; no implica sincronización automática ni certifica otros datos o modelos.</p>
+        <a class="text-link" href="https://github.com/MauricioPerera/portable-agent-workspace-template/blob/main/docs/casos/negocio-glm.md">Leer el caso completo y su evidencia <span aria-hidden="true">↗</span></a>
       </section>
       <section class="prompt-section shell" id="prompt" aria-labelledby="prompt-title">
         <div class="prompt-copy"><p class="kicker">Para agentes y automatizaciones</p><h2 id="prompt-title">Una instrucción lista para pegar en tu IA.</h2><p>No necesitas conocer la estructura ni usar Git. Tu IA debe poder crear archivos y ejecutar comandos, con Python 3.10 o posterior disponible. El prompt detecta lo que falte y solo declara éxito después de verificar el primer uso.</p><a class="text-link" href="prompt.md">Abrir el prompt completo <span aria-hidden="true">↗</span></a></div>

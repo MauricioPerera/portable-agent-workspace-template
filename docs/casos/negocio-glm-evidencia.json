@@ -1,0 +1,51 @@
+{
+  "passed": true,
+  "checks": {
+    "originals_and_core_unchanged": true,
+    "moved_report_exists": true,
+    "old_report_absent": true,
+    "updated_values": true,
+    "new_sale_once": true,
+    "command:scripts/validate_workspace.py": true,
+    "command:scripts/check_first_run.py": true,
+    "command:scripts/validate_okf_nodes.py": true,
+    "command:proyectos/seguimiento/resumen.py": true,
+    "recalculation_values": true,
+    "recalculation_does_not_restore_old_path": true
+  },
+  "commands": [
+    {
+      "command": [
+        "scripts/validate_workspace.py"
+      ],
+      "exit_code": 0,
+      "stdout": "OK: operational workspace structure and contracts\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "scripts/check_first_run.py"
+      ],
+      "exit_code": 0,
+      "stdout": "OK: first-run inventory and evidence match current workspace\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "scripts/validate_okf_nodes.py"
+      ],
+      "exit_code": 0,
+      "stdout": "Markdown nodes: 17\nOK: metadata subset and local destinations; anchors/remote URLs not checked.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "proyectos/seguimiento/resumen.py"
+      ],
+      "exit_code": 0,
+      "stdout": "[{\"mes\": \"2026-01\", \"ventas\": 225.0, \"gastos\": 50.0, \"diferencia\": 175.0}, {\"mes\": \"2026-02\", \"ventas\": 200.0, \"gastos\": 40.0, \"diferencia\": 160.0}]\n",
+      "stderr": ""
+    }
+  ],
+  "scope": "Observed local trial, template 0.4.0, 2026-09-21; independent final checks, not general certification."
+}
