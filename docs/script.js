@@ -1,15 +1,18 @@
-const copyButton = document.querySelector("[data-copy-target]");
-
-if (copyButton) {
+document.querySelectorAll("[data-copy-target]").forEach((copyButton) => {
   copyButton.addEventListener("click", async () => {
     const target = document.getElementById(copyButton.dataset.copyTarget);
     const status = document.querySelector(".copy-status");
+    const originalLabel = copyButton.textContent;
+
     try {
       await navigator.clipboard.writeText(target?.innerText ?? "");
-      status.textContent = "Código copiado al portapapeles.";
+      if (status) status.textContent = "Instrucciones copiadas. Pégalas en tu IA.";
       copyButton.textContent = "Copiado";
+      window.setTimeout(() => {
+        copyButton.textContent = originalLabel;
+      }, 1800);
     } catch {
-      status.textContent = "Selecciona el código para copiarlo.";
+      if (status) status.textContent = "Selecciona el mensaje para copiarlo.";
     }
   });
-}
+});

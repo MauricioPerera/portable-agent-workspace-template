@@ -23,7 +23,7 @@
         <div class="eyebrow"><span></span> plantilla pública · sin paquetes externos</div>
         <h1>Tu conocimiento no debería vivir <em>dentro</em> de un modelo.</h1>
         <p class="hero-copy">Portable Agent Workspace reúne instrucciones, fuentes de verdad, skills, contratos y evidencia en una carpeta que cualquier agente puede continuar usando.</p>
-        <div class="hero-actions"><a class="button button-primary" href="https://github.com/MauricioPerera/portable-agent-workspace-template/generate">Usar esta plantilla <span aria-hidden="true">→</span></a><a class="button button-secondary" href="prompt.md">Leer prompt.md</a></div>
+        <div class="hero-actions"><a class="button button-primary" href="https://github.com/MauricioPerera/portable-agent-workspace-template/generate">Usar esta plantilla <span aria-hidden="true">→</span></a><button class="button button-secondary" type="button" data-copy-target="agent-prompt">Copiar instrucciones para mi IA</button></div>
         <div class="trust-row"><span>AGENTS.md primero</span><i></i><span>contratos verificables</span><i></i><span>modelo intercambiable</span></div>
       </section>
       <section class="architecture shell" id="modelo" aria-labelledby="architecture-title">
@@ -44,10 +44,10 @@
         </div>
       </section>
       <section class="prompt-section shell" id="prompt" aria-labelledby="prompt-title">
-        <div class="prompt-copy"><p class="kicker">Para agentes y automatizaciones</p><h2 id="prompt-title">Un prompt público, legible y siempre versionado.</h2><p>El archivo Markdown incluye el flujo de implementación, reglas operativas y validación. Se entrega como <code>text/markdown</code>, no como HTML.</p><a class="text-link" href="prompt.md">Abrir el prompt completo <span aria-hidden="true">↗</span></a></div>
-        <div class="code-card"><div class="code-card-top"><span>prompt.js</span><button type="button" data-copy-target="fetch-command">Copiar</button></div><pre id="fetch-command"><code>const instructions = await fetch(
-  "https://mauricioperera.github.io/portable-agent-workspace-template/prompt.md"
-).then(response =&gt; response.text());</code></pre><p class="copy-status" aria-live="polite"></p></div>
+        <div class="prompt-copy"><p class="kicker">Para agentes y automatizaciones</p><h2 id="prompt-title">Una instrucción lista para pegar en tu IA.</h2><p>No necesitas entender la estructura ni instalar herramientas. Copia el mensaje y envíalo a la IA que uses para que lea el prompt y despliegue tu workspace.</p><a class="text-link" href="prompt.md">Abrir el prompt completo <span aria-hidden="true">↗</span></a></div>
+        <div class="code-card"><div class="code-card-top"><span>mensaje para tu IA</span><button type="button" data-copy-target="agent-prompt">Copiar mensaje</button></div><pre id="agent-prompt"><code>Lee y sigue todas las instrucciones de este prompt para crear y usar mi Portable Agent Workspace:
+
+https://mauricioperera.github.io/portable-agent-workspace-template/prompt.md</code></pre><p class="copy-status" aria-live="polite"></p></div>
       </section>
       <section class="rules shell" aria-labelledby="rules-title"><div class="section-heading compact"><p class="kicker">Reglas que viajan contigo</p><h2 id="rules-title">Una base clara para colaborar con cualquier agente.</h2></div><div class="rule-list"><div><span>→</span><p><strong>No alucinar:</strong> si falta información, pedir confirmación.</p></div><div><span>→</span><p><strong>Contexto progresivo:</strong> leer índices antes de cargar todo.</p></div><div><span>→</span><p><strong>Evidencia antes de cierre:</strong> ejecutar el test del contrato.</p></div><div><span>→</span><p><strong>Plantilla limpia:</strong> mantener ejemplos y datos fuera del núcleo.</p></div></div></section>
     </main>
