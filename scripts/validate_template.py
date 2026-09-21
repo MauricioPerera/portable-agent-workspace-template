@@ -26,6 +26,9 @@ REQUIRED = {
     "scripts/validate_template.py",
     "tests/test_init_workspace.py",
     ".github/workflows/validate.yml",
+    ".github/workflows/pages.yml",
+    "docs/index.html",
+    "docs/prompt.md",
 }
 
 FORBIDDEN_PATHS = {

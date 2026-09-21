@@ -50,3 +50,7 @@ El scaffold falla si el destino no está vacío; no sobrescribe workspaces exist
 ## Publicación
 
 Consulta [PUBLISHING.md](PUBLISHING.md) para convertir este directorio en una plantilla de GitHub. La distribución directa es libre bajo la licencia [MIT](LICENSE).
+
+## Prompt remoto para agentes
+
+La GitHub Page publica un prompt Markdown autocontenido en [prompt.md](https://mauricioperera.github.io/portable-agent-workspace-template/prompt.md). Un agente puede recuperarlo con `fetch(...)` y seguir sus instrucciones.
