@@ -29,6 +29,8 @@ REQUIRED = {
     ".github/workflows/pages.yml",
     "docs/index.html",
     "docs/prompt.md",
+    "docs/styles.css",
+    "docs/script.js",
 }
 
 FORBIDDEN_PATHS = {
