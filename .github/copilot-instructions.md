@@ -1,0 +1,8 @@
+---
+type: 'Agent Adapter'
+name: 'github-copilot'
+---
+
+# Copilot Workspace Pointer
+
+Lee primero [AGENTS.md](../AGENTS.md). Es la fuente canónica de reglas del workspace.

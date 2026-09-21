@@ -1,0 +1,13 @@
+name: portable-agent-workspace-template
+version: 0.3.0
+methodology: file-based-kdd
+spec_version: 0.1.0
+language: es
+entrypoint: AGENTS.md
+knowledge_dir: context
+skills_dir: skills
+contracts_dir: contracts
+memory_dir: memoria
+projects_dir: proyectos
+scripts_dir: scripts
+reports_dir: reports
