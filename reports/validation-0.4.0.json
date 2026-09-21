@@ -1,0 +1,66 @@
+{
+  "timestamp_utc": "2026-09-21T03:28:48.533975+00:00",
+  "python": "3.14.6",
+  "platform": "Windows",
+  "source_hash_normalization": "CRLF to LF",
+  "source_files_sha256": {
+    ".clinerules": "d18ef4a8c3f83aa4ac23e6e3ec800223b0abee541fc14c526a52d0965b3ce3d1",
+    ".cursorrules": "3ace944223ba0cadec33e21a11cc1263764ded2f83b9972b71a77d234f78bf30",
+    ".gitattributes": "d60f352d0db1404c70afb4bb8b2ca3fd1c610572aa40720e8a0b7baa7885418c",
+    ".github/copilot-instructions.md": "db6a5e259acc49ae3273cfb4b315ba4f691f37772354047eddf34babd3f4f1ca",
+    ".github/workflows/pages.yml": "20f2cd3e4e534ee6bd434eb9897d5ffaee7c0eba406fb4911d1c1cbe16226537",
+    ".github/workflows/validate.yml": "ea7ef6879bc866c0cbd8fa6ff803f8c83dfd1504f3945eb4908c3f58c2c14c45",
+    ".gitignore": "fbc73464356ab45748bd8e0e813591083d709f4c6dfb779e6d3b0abb6f78928a",
+    ".windsurfrules": "4fd992f3e673ed663430f794e5b4dd222af3d440a0124db0ca832a11d76d3aa5",
+    "AGENTS.md": "d194a1ebd187e33dfb3c1a882f191b9b011a50c76bfeb707cf43b54980b8fe34",
+    "CLAUDE.md": "c3c662aef245d8c5a2d4a6cd5bd265c5bad717e271c8b0121c72d5700ce297cb",
+    "LICENSE": "b5735d0ef659c6cc774a5f8216c22645a5966f8ab7d2bee0076a28a094d325b9",
+    "PUBLISHING.md": "3e57040b4b4f2f3db93db7787f9fe4101efd6cce2b3c245b31f2f3fd35a5066b",
+    "README.md": "754f813923a52f26af331ab0e1fff0fce25e9140bb4f6157acdf0b7a29e46d51",
+    "WORKSPACE-SPEC.md": "aebe572e1e9c0355dddae957757a671b67f91308d16b194424169c925a658069",
+    "context/index.md": "46b7d9b200e4184716ff907d3f6dd36fec564bc23e048bad1d24b39c712de360",
+    "contracts/index.md": "fd938a03c2d9fc6439c01e4f3187d7a6fbb852c4690beebe8bb01bbb4a37fc1e",
+    "contracts/init-workspace.md": "c25c603ede0e6d338a8322efc8b602d1eed00b9b3631c49803b8ad66a24234b2",
+    "docs/.nojekyll": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "docs/index.html": "575a5c39e0d0da39c8b59432f37ae01defe10113950822601aa7dedcc12822dd",
+    "docs/prompt.md": "e34381d5cb6fd571cf9db40372d61153d5c20d4524c01fb01baac24f1d7cef03",
+    "docs/script.js": "47984952a86e1d6d3b8bee6dbf9e84b2104a401ba86d877ae9ffeae9436d2511",
+    "docs/styles.css": "242d731f7730e0c939f33600eafccb08de310eb89172cea4a15aa72110ed9344",
+    "manifest.yaml": "f935242db7d71f4b1629683597550acd3cacb83c0a1e3b2c1a6fc99486dcbff1",
+    "memoria/log_sesiones.md": "816f1f13292903dd7de556766bda97abeee6964bc2d822b0029684c1aa6053a3",
+    "memoria/preferencias_consolidadas.md": "93265c3c2d9c1542cb5d6a1603dc93461244a51fddf56457d67faa468a00632e",
+    "proyectos/.gitkeep": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "scripts/check_first_run.py": "a69fbb1c2828b765b76f0973c67c93bbe75d0ecface13429a360f8d4acdeb6be",
+    "scripts/first_run.py": "204d9b9142b85d35cd00211daa633c75a0d2230c2e3d21a804c4cca37fabd216",
+    "scripts/init_workspace.py": "cefd257a26e846d1058d661a5acd3d7b17ee14a2fb3d0ad4ab356bbd1d5245c6",
+    "scripts/validate_okf_nodes.py": "78912b3951b14d6e46e96c7b476cbedade22b702681996c149118f308663b010",
+    "scripts/validate_template.py": "b9993ee97c43aab2906826fed74b2acd8241849aa7b2f17d59f95aedcf6a5caa",
+    "scripts/validate_workspace.py": "9f350ff49df76915c4a3d3f207c75bd488ace11e38e318d7e963eadd6db4c37e",
+    "skills/index.md": "25a4d129b694aff80881cd1d6a5e61bceda0b2dced9a85a0d3e0bd9646d7d775",
+    "tests/test_init_workspace.py": "54553135122dc430759ea62dd3844d3c50f5141afce8742120da61689ecd61ac",
+    "tests/test_workspace_acceptance.py": "2804c1c66437c2454296d912aad4bcab12d0eb62c43cf8f91b8a490ec44d7d70"
+  },
+  "checks": [
+    {
+      "command": "python scripts/validate_okf_nodes.py",
+      "exit_code": 0,
+      "elapsed_seconds": 0.09426990000065416,
+      "stdout": "Markdown nodes: 15\nOK: metadata subset and local destinations; anchors/remote URLs not checked.\n",
+      "stderr": ""
+    },
+    {
+      "command": "python scripts/validate_template.py",
+      "exit_code": 0,
+      "elapsed_seconds": 0.08757660000264877,
+      "stdout": "OK: estructura, manifiesto y rutas del núcleo válidos. No verifica secretos ni veracidad del contenido.\n",
+      "stderr": ""
+    },
+    {
+      "command": "python -m unittest discover -s tests -v",
+      "exit_code": 0,
+      "elapsed_seconds": 13.612805299999309,
+      "stdout": "",
+      "stderr": "test_creates_complete_and_valid_workspace (test_init_workspace.InitWorkspaceTests.test_creates_complete_and_valid_workspace) ... ok\ntest_refuses_to_overwrite_nonempty_destination (test_init_workspace.InitWorkspaceTests.test_refuses_to_overwrite_nonempty_destination) ... ok\ntest_bad_runtime_does_not_deliver_partial_workspace (test_workspace_acceptance.AcceptanceTests.test_bad_runtime_does_not_deliver_partial_workspace) ... ok\ntest_changed_input_invalidates_record_and_rerun_repairs (test_workspace_acceptance.AcceptanceTests.test_changed_input_invalidates_record_and_rerun_repairs) ... ok\ntest_existing_file_is_preserved (test_workspace_acceptance.AcceptanceTests.test_existing_file_is_preserved) ... ok\ntest_git_roundtrip_preserves_structure_and_evidence (test_workspace_acceptance.AcceptanceTests.test_git_roundtrip_preserves_structure_and_evidence) ... ok\ntest_initialization_evidence_is_required (test_workspace_acceptance.AcceptanceTests.test_initialization_evidence_is_required) ... ok\ntest_invalid_names_leave_no_output (test_workspace_acceptance.AcceptanceTests.test_invalid_names_leave_no_output) ... ok\ntest_missing_outputs_can_be_regenerated (test_workspace_acceptance.AcceptanceTests.test_missing_outputs_can_be_regenerated) ... ok\ntest_missing_resource_fails_before_writing (test_workspace_acceptance.AcceptanceTests.test_missing_resource_fails_before_writing) ... ok\ntest_names_are_valid_metadata (test_workspace_acceptance.AcceptanceTests.test_names_are_valid_metadata) ... ok\ntest_prompt_zip_route_and_scaffold_are_equivalent (test_workspace_acceptance.AcceptanceTests.test_prompt_zip_route_and_scaffold_are_equivalent) ... ok\ntest_raw_inputs_remain_unchanged (test_workspace_acceptance.AcceptanceTests.test_raw_inputs_remain_unchanged) ... ok\ntest_tampered_result_and_evidence_fail (test_workspace_acceptance.AcceptanceTests.test_tampered_result_and_evidence_fail) ... ok\ntest_template_rejects_domain_files_and_comment_manifest (test_workspace_acceptance.AcceptanceTests.test_template_rejects_domain_files_and_comment_manifest) ... ok\ntest_code_samples_and_valid_references (test_workspace_acceptance.NodeRegressionTests.test_code_samples_and_valid_references) ... ok\ntest_negative_audit_cases (test_workspace_acceptance.NodeRegressionTests.test_negative_audit_cases) ... ok\ntest_strict_metadata (test_workspace_acceptance.NodeRegressionTests.test_strict_metadata) ... ok\n\n----------------------------------------------------------------------\nRan 18 tests in 13.439s\n\nOK\n"
+    }
+  ]
+}

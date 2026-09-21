@@ -6,15 +6,19 @@ on:
 
 jobs:
   validate:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ['3.10', '3.14']
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: ${{ matrix.python }}
       - name: Validate OKF nodes
         run: python scripts/validate_okf_nodes.py
       - name: Validate clean template
         run: python scripts/validate_template.py
-      - name: Test scaffold
-        run: python -m unittest tests.test_init_workspace
+      - name: Test prompt, scaffold and negative regressions
+        run: python -m unittest discover -s tests -v

@@ -1,7 +1,8 @@
 name: portable-agent-workspace-template
-version: 0.3.0
+version: 0.4.0
+profile: template
 methodology: file-based-kdd
-spec_version: 0.1.0
+spec_version: 0.2.0
 language: es
 entrypoint: AGENTS.md
 knowledge_dir: context

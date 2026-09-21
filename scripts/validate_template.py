@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Deterministically verify that this repository remains a clean template."""
+"""Verify template structure and core paths, not semantic cleanliness or secrets."""
 
 import sys
 from pathlib import Path
+from validate_okf_nodes import parse_metadata
 
 
 REQUIRED = {
@@ -12,6 +13,7 @@ REQUIRED = {
     "PUBLISHING.md",
     "LICENSE",
     ".gitignore",
+    ".gitattributes",
     "manifest.yaml",
     "context/index.md",
     "skills/index.md",
@@ -24,7 +26,11 @@ REQUIRED = {
     "scripts/init_workspace.py",
     "scripts/validate_okf_nodes.py",
     "scripts/validate_template.py",
+    "scripts/validate_workspace.py",
+    "scripts/first_run.py",
+    "scripts/check_first_run.py",
     "tests/test_init_workspace.py",
+    "tests/test_workspace_acceptance.py",
     ".github/workflows/validate.yml",
     ".github/workflows/pages.yml",
     "docs/index.html",
@@ -49,24 +55,36 @@ def main() -> int:
     errors = []
 
     for relative in sorted(REQUIRED):
-        if not (root / relative).exists():
+        if not (root / relative).is_file():
             errors.append(f"Falta artefacto requerido: {relative}")
     for relative in sorted(FORBIDDEN_PATHS):
         if (root / relative).exists():
             errors.append(f"Artefacto de dominio prohibido en plantilla: {relative}")
 
-    manifest = (root / "manifest.yaml").read_text(encoding="utf-8") if (root / "manifest.yaml").exists() else ""
-    for key in ("methodology:", "spec_version:", "entrypoint: AGENTS.md"):
-        if key not in manifest:
-            errors.append(f"manifest.yaml carece de '{key}'")
+    try:
+        manifest = parse_metadata((root / 'manifest.yaml').read_text(encoding='utf-8'))
+        for key, value in {'profile': 'template', 'methodology': 'file-based-kdd',
+                           'spec_version': '0.2.0', 'entrypoint': 'AGENTS.md',
+                           'version': '0.4.0'}.items():
+            if manifest.get(key) != value:
+                errors.append(f'manifest.yaml: se requiere {key}: {value}')
+    except (OSError, ValueError) as exc:
+        errors.append(f'manifest.yaml: {exc}')
+    allowed = {'context': {'index.md'}, 'skills': {'index.md'},
+               'memoria': {'log_sesiones.md', 'preferencias_consolidadas.md'},
+               'proyectos': {'.gitkeep'}}
+    for directory, names in allowed.items():
+        for path in (root / directory).rglob('*'):
+            if path.is_file() and path.relative_to(root / directory).as_posix() not in names:
+                errors.append(f'Archivo no permitido en núcleo de plantilla: {path.relative_to(root)}')
 
     if errors:
-        print("FALLO: plantilla no publicable")
+        print("FALLO: estructura de plantilla inválida")
         for error in errors:
             print(f"- {error}")
         return 1
 
-    print("OK: plantilla limpia, estructuralmente completa y lista para publicar.")
+    print("OK: estructura, manifiesto y rutas del núcleo válidos. No verifica secretos ni veracidad del contenido.")
     return 0
 
 

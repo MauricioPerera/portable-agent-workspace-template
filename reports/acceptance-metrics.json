@@ -1,0 +1,8 @@
+{
+  "prompt_seconds": 0.7316659000061918,
+  "scaffold_seconds": 0.6262204000013298,
+  "prompt_commands": 3,
+  "scaffold_commands": 1,
+  "interactive_requests_during_commands": 0,
+  "scope": "Measured generation commands only; excludes archive preparation, download and AI reasoning. No interactive subprocess requests; not an evaluation of arbitrary models."
+}
