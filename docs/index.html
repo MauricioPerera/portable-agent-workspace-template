@@ -23,7 +23,7 @@
         <div class="eyebrow"><span></span> plantilla pública · sin paquetes externos</div>
         <h1>Tu conocimiento no debería vivir <em>dentro</em> de un modelo.</h1>
         <p class="hero-copy">Portable Agent Workspace reúne instrucciones, fuentes de verdad, skills, contratos y evidencia en una carpeta que cualquier agente puede continuar usando.</p>
-        <div class="hero-actions"><a class="button button-primary" href="https://github.com/MauricioPerera/portable-agent-workspace-template/generate">Usar esta plantilla <span aria-hidden="true">→</span></a><button class="button button-secondary" type="button" data-copy-target="agent-prompt">Copiar instrucciones para mi IA</button></div>
+        <div class="hero-actions"><button class="button button-primary" type="button" data-copy-target="agent-prompt">Copiar instrucciones para mi IA</button><a class="button button-secondary" href="https://github.com/MauricioPerera/portable-agent-workspace-template/generate">Ver plantilla en GitHub <span aria-hidden="true">→</span></a></div>
         <div class="trust-row"><span>AGENTS.md primero</span><i></i><span>contratos verificables</span><i></i><span>modelo intercambiable</span></div>
       </section>
       <section class="architecture shell" id="modelo" aria-labelledby="architecture-title">
@@ -38,13 +38,13 @@
       <section class="start shell" id="empezar" aria-labelledby="start-title">
         <div class="section-heading compact"><p class="kicker">Tres formas de empezar</p><h2 id="start-title">Adopta la plantilla en minutos.</h2></div>
         <div class="start-grid">
-          <article class="start-card featured"><span class="card-label">Recomendado</span><h3>Desde GitHub</h3><p>Crea un repositorio nuevo con la estructura, validadores y guía de publicación incluidos.</p><a href="https://github.com/MauricioPerera/portable-agent-workspace-template/generate">Use this template <span aria-hidden="true">→</span></a></article>
-          <article class="start-card"><span class="card-label">Local</span><h3>Con el scaffold</h3><p>Genera un workspace vacío con Python estándar, sin paquetes adicionales.</p><code>python scripts/init_workspace.py</code></article>
-          <article class="start-card"><span class="card-label">Con tu agente</span><h3>Usa el prompt remoto</h3><p>Recupera instrucciones completas y entrégalas al agente que prefieras.</p><a href="#prompt">Ver fetch() <span aria-hidden="true">↓</span></a></article>
+          <article class="start-card featured"><span class="card-label">Recomendado</span><h3>Díselo a tu IA</h3><p>Copia el prompt. Tu agente crea el workspace, ejecuta su primer uso y verifica el resultado.</p><a href="#prompt">Copiar el mensaje <span aria-hidden="true">↓</span></a></article>
+          <article class="start-card"><span class="card-label">Técnico</span><h3>Con el scaffold</h3><p>Desde la distribución, un comando genera y valida tu instancia con Python 3.10 o posterior.</p><code>python scripts/init_workspace.py</code></article>
+          <article class="start-card"><span class="card-label">Distribución</span><h3>Desde GitHub</h3><p>Copia la plantilla y ejecuta su scaffold. La instancia de trabajo queda separada de la web y los tests.</p><a href="https://github.com/MauricioPerera/portable-agent-workspace-template/generate">Use this template <span aria-hidden="true">→</span></a></article>
         </div>
       </section>
       <section class="prompt-section shell" id="prompt" aria-labelledby="prompt-title">
-        <div class="prompt-copy"><p class="kicker">Para agentes y automatizaciones</p><h2 id="prompt-title">Una instrucción lista para pegar en tu IA.</h2><p>No necesitas entender la estructura ni instalar herramientas. Copia el mensaje y envíalo a la IA que uses para que lea el prompt y despliegue tu workspace.</p><a class="text-link" href="prompt.md">Abrir el prompt completo <span aria-hidden="true">↗</span></a></div>
+        <div class="prompt-copy"><p class="kicker">Para agentes y automatizaciones</p><h2 id="prompt-title">Una instrucción lista para pegar en tu IA.</h2><p>No necesitas conocer la estructura ni usar Git. Tu IA debe poder crear archivos y ejecutar comandos, con Python 3.10 o posterior disponible. El prompt detecta lo que falte y solo declara éxito después de verificar el primer uso.</p><a class="text-link" href="prompt.md">Abrir el prompt completo <span aria-hidden="true">↗</span></a></div>
         <div class="code-card"><div class="code-card-top"><span>mensaje para tu IA</span><button type="button" data-copy-target="agent-prompt">Copiar mensaje</button></div><pre id="agent-prompt"><code>Lee y sigue todas las instrucciones de este prompt para crear y usar mi Portable Agent Workspace:
 
 https://mauricioperera.github.io/portable-agent-workspace-template/prompt.md</code></pre><p class="copy-status" aria-live="polite"></p></div>
