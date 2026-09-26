@@ -21,7 +21,8 @@ def check(root, require_execution=True):
         report = json.loads((root / 'reports/primer-uso.json').read_text(encoding='utf-8'))
         if inventory.get('workspace') != manifest['name'] or inventory.get('spec_version') != '0.2.0':
             errors.append('Inventory identity mismatch')
-        sources = sorted(p.relative_to(root).as_posix() for p in (root / 'context').rglob('*') if p.is_file() and p.name != 'index.md')
+        sources = sorted(p.relative_to(root).as_posix() for p in (root / 'context').rglob('*')
+                         if p.is_file() and p != root / 'context/index.md')
         skills = sorted(p.relative_to(root).as_posix() for p in (root / 'skills').glob('*.md') if p.name != 'index.md')
         if inventory.get('sources') != sources or inventory.get('skills') != skills:
             errors.append('Inventory does not match actual sources/skills')
@@ -39,6 +40,10 @@ def check(root, require_execution=True):
         recorded = report.get('inputs_sha256', {})
         if set(recorded) != expected_inputs or any(recorded.get(p) != sha(root / p) for p in expected_inputs):
             errors.append('Evidence inputs changed; rerun first_run.py')
+        recorded_sources = report.get('sources_sha256', {})
+        if (not isinstance(recorded_sources, dict) or set(recorded_sources) != set(sources)
+                or any(recorded_sources.get(p) != sha(root / p) for p in sources)):
+            errors.append('Source content changed; rerun first_run.py')
         if report.get('output') != 'proyectos/primer-uso/inventario.json' or report.get('output_sha256') != sha(inventory_path):
             errors.append('Evidence output mismatch')
         if not isinstance(report.get('elapsed_seconds'), (float, int)) or not math.isfinite(report['elapsed_seconds']) or report['elapsed_seconds'] < 0:
@@ -54,9 +59,19 @@ def check(root, require_execution=True):
                     or initial.get('template_digest') != manifest['template_digest']):
                 errors.append('Initialization provenance mismatch')
             executions = initial.get('commands', [])
-            if (len(executions) != 1 or executions[0].get('command') != 'python scripts/first_run.py'
-                    or executions[0].get('exit_code') != 0):
+            if (not isinstance(executions, list) or len(executions) != 1
+                    or not isinstance(executions[0], dict)
+                    or executions[0].get('command') != 'python scripts/first_run.py'
+                    or executions[0].get('exit_code') != 0
+                    or not isinstance(executions[0].get('stdout'), str)
+                    or not isinstance(executions[0].get('stderr'), str)):
                 errors.append('Initialization did not record successful first use')
+            duration = initial.get('elapsed_seconds')
+            if (isinstance(duration, bool) or not isinstance(duration, (float, int))
+                    or not math.isfinite(duration) or duration < 0):
+                errors.append('Missing measured initialization duration')
+            if not isinstance(initial.get('scope'), str) or not initial['scope'].strip():
+                errors.append('Missing initialization scope')
     except (OSError, ValueError, KeyError, TypeError, AttributeError) as exc:
         errors.append(f'Invalid or missing first-run evidence: {exc}')
     return errors

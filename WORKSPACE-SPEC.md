@@ -38,7 +38,7 @@ Los validadores inspeccionan metadatos y archivos; no ejecutan automáticamente 
 
 ## Primer uso
 
-`python scripts/first_run.py` comprueba la estructura, inventaría identidad, fuentes y skills, escribe resultado y evidencia y ejecuta `python scripts/check_first_run.py`. El oráculo compara contenido con el filesystem y verifica hashes de entradas y salida. Rerun si cambia un archivo registrado. Los hashes no son firmas ni protección contra alguien con permiso para alterar todo el workspace.
+`python scripts/first_run.py` comprueba la estructura, inventaría identidad, fuentes y skills, escribe resultado y evidencia y ejecuta `python scripts/check_first_run.py`. El oráculo compara contenido con el filesystem y verifica hashes de entradas, de cada archivo fuente en `context/` y de la salida. Rerun si cambia un archivo registrado. Los hashes no son firmas ni protección contra alguien con permiso para alterar todo el workspace.
 
 `python scripts/validate_workspace.py` valida estructura y contratos. `python scripts/check_first_run.py` valida el resultado guardado. Solo declarar lista una instancia si ambas pruebas pasan y hay evidencia de inicialización con el código real de primer uso.
 

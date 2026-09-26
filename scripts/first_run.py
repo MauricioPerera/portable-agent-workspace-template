@@ -29,7 +29,7 @@ def main():
         return 1
     manifest = parse_metadata((root / 'manifest.yaml').read_text(encoding='utf-8'))
     sources = sorted(p.relative_to(root).as_posix() for p in (root / 'context').rglob('*')
-                     if p.is_file() and p.name != 'index.md')
+                     if p.is_file() and p != root / 'context/index.md')
     skills = sorted(p.relative_to(root).as_posix() for p in (root / 'skills').glob('*.md') if p.name != 'index.md')
     result = {'workspace': manifest['name'], 'spec_version': manifest['spec_version'],
               'sources': sources, 'skills': skills,
@@ -44,6 +44,7 @@ def main():
               'python': sys.version.split()[0],
               'elapsed_seconds': round(time.perf_counter() - started, 6),
               'inputs_sha256': {p: digest(root / p) for p in INPUTS},
+              'sources_sha256': {p: digest(root / p) for p in sources},
               'output': RESULT, 'output_sha256': digest(target)}
     (root / REPORT).write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
     check = subprocess.run([sys.executable, str(root / 'scripts/check_first_run.py'), '--record'], cwd=root,

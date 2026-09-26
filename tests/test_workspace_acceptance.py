@@ -182,6 +182,48 @@ class AcceptanceTests(unittest.TestCase):
         self.assertEqual(command([sys.executable, 'scripts/first_run.py'], target).returncode, 0)
         self.assertEqual(command([sys.executable, 'scripts/check_first_run.py'], target).returncode, 0)
 
+    def test_changed_source_content_invalidates_record(self):
+        target = self.create()
+        source = target / 'context/fuente.md'
+        source.write_text('---\ntype: Knowledge\n---\n\nValor A\n', encoding='utf-8')
+        self.assertEqual(command([sys.executable, 'scripts/first_run.py'], target).returncode, 0)
+        source.write_text('---\ntype: Knowledge\n---\n\nValor B\n', encoding='utf-8')
+        result = command([sys.executable, 'scripts/check_first_run.py'], target)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('Source content changed', result.stdout)
+        self.assertEqual(command([sys.executable, 'scripts/first_run.py'], target).returncode, 0)
+        self.assertEqual(command([sys.executable, 'scripts/check_first_run.py'], target).returncode, 0)
+
+    def test_nested_index_source_content_is_tracked(self):
+        target = self.create()
+        source = target / 'context/proveedor/index.md'
+        source.parent.mkdir()
+        source.write_text('---\ntype: Knowledge\n---\n\nValor A\n', encoding='utf-8')
+        self.assertEqual(command([sys.executable, 'scripts/first_run.py'], target).returncode, 0)
+        source.write_text('---\ntype: Knowledge\n---\n\nValor B\n', encoding='utf-8')
+        self.assertNotEqual(command([sys.executable, 'scripts/check_first_run.py'], target).returncode, 0)
+
+    def test_real_publishing_guide_roundtrip(self):
+        target = self.create('Publicación real')
+        original = (ROOT / 'PUBLISHING.md').read_bytes()
+        preserved = target / 'proyectos/entradas/PUBLISHING.md'
+        source = target / 'context/guia-publicacion.md'
+        preserved.write_bytes(original)
+        source.write_bytes(original)
+        self.assertEqual(command([sys.executable, 'scripts/first_run.py'], target).returncode, 0)
+        inventory = json.loads((target / 'proyectos/primer-uso/inventario.json').read_text(encoding='utf-8'))
+        report = json.loads((target / 'reports/primer-uso.json').read_text(encoding='utf-8'))
+        self.assertIn('context/guia-publicacion.md', inventory['sources'])
+        self.assertEqual(report['sources_sha256']['context/guia-publicacion.md'], hashlib.sha256(original).hexdigest())
+        self.assertEqual(preserved.read_bytes(), original)
+        updated = original.replace(b'Antes de publicar', b'Antes de publicar esta revision', 1)
+        self.assertNotEqual(updated, original)
+        source.write_bytes(updated)
+        self.assertNotEqual(command([sys.executable, 'scripts/check_first_run.py'], target).returncode, 0)
+        self.assertEqual(command([sys.executable, 'scripts/first_run.py'], target).returncode, 0)
+        self.assertEqual(command([sys.executable, 'scripts/check_first_run.py'], target).returncode, 0)
+        self.assertEqual(preserved.read_bytes(), original)
+
     def test_missing_outputs_can_be_regenerated(self):
         target = self.create()
         (target / 'reports/primer-uso.json').unlink()
@@ -201,6 +243,25 @@ class AcceptanceTests(unittest.TestCase):
         path.unlink()
         self.assertNotEqual(command([sys.executable, 'scripts/check_first_run.py'], target).returncode, 0)
 
+    def test_initialization_evidence_requires_duration_output_and_scope(self):
+        target = self.create()
+        path = target / 'reports/inicializacion.json'
+        original = json.loads(path.read_text(encoding='utf-8'))
+        for field in ('elapsed_seconds', 'scope'):
+            with self.subTest(field=field):
+                changed = json.loads(json.dumps(original))
+                changed.pop(field)
+                path.write_text(json.dumps(changed), encoding='utf-8')
+                self.assertNotEqual(command([sys.executable, 'scripts/check_first_run.py'], target).returncode, 0)
+        for field in ('stdout', 'stderr'):
+            with self.subTest(field=field):
+                changed = json.loads(json.dumps(original))
+                changed['commands'][0].pop(field)
+                path.write_text(json.dumps(changed), encoding='utf-8')
+                self.assertNotEqual(command([sys.executable, 'scripts/check_first_run.py'], target).returncode, 0)
+        path.write_text(json.dumps(original), encoding='utf-8')
+        self.assertEqual(command([sys.executable, 'scripts/check_first_run.py'], target).returncode, 0)
+
     def test_template_rejects_domain_files_and_comment_manifest(self):
         copy = self.copy_distribution(self.base / 'distribution')
         (copy / 'context/unapproved.md').write_text('---\ntype: Knowledge\n---\nSynthetic domain\n', encoding='utf-8')
@@ -208,6 +269,20 @@ class AcceptanceTests(unittest.TestCase):
         (copy / 'context/unapproved.md').unlink()
         (copy / 'manifest.yaml').write_text('# methodology:\n# spec_version:\n# entrypoint: AGENTS.md\n', encoding='utf-8')
         self.assertNotEqual(command([sys.executable, 'scripts/validate_template.py'], copy).returncode, 0)
+
+    def test_template_rejects_unapproved_domain_files_outside_core(self):
+        copy = self.copy_distribution(self.base / 'distribution')
+        for relative in ('contracts/cliente-real.md', 'reports/cliente-real.json',
+                         'docs/casos/cliente-real.md', '.venv/cliente-real.txt',
+                         '__pycache__/cliente-real.txt'):
+            with self.subTest(path=relative):
+                path = copy / relative
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text('---\ntype: Knowledge\n---\n\nDatos de cliente\n', encoding='utf-8')
+                result = command([sys.executable, 'scripts/validate_template.py'], copy)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn('Archivo no autorizado', result.stdout)
+                path.unlink()
 
 
 class NodeRegressionTests(unittest.TestCase):

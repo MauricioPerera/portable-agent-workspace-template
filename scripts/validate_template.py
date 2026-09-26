@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify template structure and core paths, not semantic cleanliness or secrets."""
+"""Verify the distributor's approved file inventory, not file contents or secrets."""
 
 import sys
 from pathlib import Path
@@ -39,14 +39,13 @@ REQUIRED = {
     "docs/script.js",
 }
 
-FORBIDDEN_PATHS = {
-    "context/catalogo_servicios.md",
-    "context/politicas_comerciales.md",
-    "skills/generar-presupuesto.md",
-    "contracts/generar-presupuesto.md",
-    "scripts/oracle_presupuesto.py",
-    "scripts/run_demo.py",
-    "proyectos/caso-cliente-alpha",
+ALLOWED_EXTRA = {
+    ".clinerules", ".cursorrules", ".windsurfrules", "CLAUDE.md",
+    ".github/copilot-instructions.md", "docs/.nojekyll",
+    "docs/casos/negocio-glm-evidencia.json", "docs/casos/negocio-glm.md",
+    "reports/acceptance-0.4.0.md", "reports/acceptance-metrics.json",
+    "reports/business-use-case.md", "reports/page-spacing.md",
+    "reports/validation-0.4.0.json", "reports/audit-fixes-2026-09-25.md",
 }
 
 
@@ -57,9 +56,16 @@ def main() -> int:
     for relative in sorted(REQUIRED):
         if not (root / relative).is_file():
             errors.append(f"Falta artefacto requerido: {relative}")
-    for relative in sorted(FORBIDDEN_PATHS):
-        if (root / relative).exists():
-            errors.append(f"Artefacto de dominio prohibido en plantilla: {relative}")
+    allowed_files = REQUIRED | ALLOWED_EXTRA
+    for path in root.rglob('*'):
+        relative = path.relative_to(root)
+        if '.git' in relative.parts or (relative.suffix == '.pyc' and '__pycache__' in relative.parts):
+            continue
+        if path.is_symlink():
+            errors.append(f"Enlace simbólico no autorizado en plantilla: {relative.as_posix()}")
+            continue
+        if path.is_file() and relative.as_posix() not in allowed_files:
+            errors.append(f"Archivo no autorizado en plantilla: {relative.as_posix()}")
 
     try:
         manifest = parse_metadata((root / 'manifest.yaml').read_text(encoding='utf-8'))
@@ -70,21 +76,13 @@ def main() -> int:
                 errors.append(f'manifest.yaml: se requiere {key}: {value}')
     except (OSError, ValueError) as exc:
         errors.append(f'manifest.yaml: {exc}')
-    allowed = {'context': {'index.md'}, 'skills': {'index.md'},
-               'memoria': {'log_sesiones.md', 'preferencias_consolidadas.md'},
-               'proyectos': {'.gitkeep'}}
-    for directory, names in allowed.items():
-        for path in (root / directory).rglob('*'):
-            if path.is_file() and path.relative_to(root / directory).as_posix() not in names:
-                errors.append(f'Archivo no permitido en núcleo de plantilla: {path.relative_to(root)}')
-
     if errors:
         print("FALLO: estructura de plantilla inválida")
         for error in errors:
             print(f"- {error}")
         return 1
 
-    print("OK: estructura, manifiesto y rutas del núcleo válidos. No verifica secretos ni veracidad del contenido.")
+    print("OK: estructura, manifiesto e inventario de archivos válidos. No verifica secretos ni veracidad del contenido.")
     return 0
 
 

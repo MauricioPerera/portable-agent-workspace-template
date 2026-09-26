@@ -18,7 +18,7 @@ python -m unittest discover -s tests -v
 
 No publiques secretos, datos de clientes ni ejemplos operativos dentro de este repositorio. Los ejemplos deben vivir en repositorios independientes.
 
-El gate de plantilla comprueba estructura, manifiesto y rutas permitidas del núcleo; no es un detector de secretos. Revisa el contenido y la evidencia antes de publicar. El prompt y el generador deben distribuirse en la misma versión. La rama local no cambia el prompt público hasta que se publique su revisión.
+El gate de plantilla comprueba estructura, manifiesto y un inventario explícito de archivos permitidos en toda la distribución. Si añades un archivo legítimo, revisa su contenido y agrégalo a `ALLOWED_EXTRA` en `scripts/validate_template.py`. El gate no es un detector de secretos: revisa el contenido y la evidencia antes de publicar. El prompt y el generador deben distribuirse en la misma versión. La rama local no cambia el prompt público hasta que se publique su revisión.
 
 ## Publicación
 
