@@ -59,3 +59,5 @@ def main() -> int:
 
 if __name__ == '__main__':
     sys.exit(main())
+
+# Temporary negative gate smoke check; branch will not be merged.
