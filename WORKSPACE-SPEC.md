@@ -30,6 +30,8 @@ El validador soporta enlaces e imágenes inline, referencias explícitas, colaps
 
 Se excluyen `.git`, `.venv`, `node_modules`, `__pycache__` y los originales de `proyectos/entradas/`. Documentar las fuentes importadas en nodos propios dentro de `context/`; no modificar originales para satisfacer el validador.
 
+La instancia rechaza enlaces simbólicos dentro de `context/`, incluidos los que apuntan a archivos fuera del workspace. Así el inventario y los hashes de fuentes no leen contenido externo.
+
 ## Skills y contratos
 
 Una skill usa `type: Skill`, `name`, `version`, `contract` (ruta relativa al documento) y `test_command`. El contrato usa `type: Task Contract`, `name`, `version`, `inputs`, `outputs`, `scope` y `test_command`. Todos son strings no vacíos. Skill y contrato deben coincidir en el comando. El comando se ejecuta desde la raíz con el Python disponible; sustituir `python` por `python3`, `py -3` o una ruta absoluta si corresponde.

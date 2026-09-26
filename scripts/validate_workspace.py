@@ -25,6 +25,13 @@ def validate(root: Path) -> list[str]:
         path = root / relative
         if not path.is_file() or not path.resolve().is_relative_to(root.resolve()):
             errors.append(f'Missing or external file: {relative}')
+    context = root / 'context'
+    if context.is_symlink():
+        errors.append('Symbolic link in context/: context')
+    if context.is_dir() and not context.is_symlink():
+        for path in context.rglob('*'):
+            if path.is_symlink() or not path.resolve().is_relative_to(root.resolve()):
+                errors.append(f'Symbolic link or external path in context/: {path.relative_to(root).as_posix()}')
     try:
         manifest = parse_metadata((root / 'manifest.yaml').read_text(encoding='utf-8'))
         expected = {'profile': 'workspace', 'methodology': 'file-based-kdd',

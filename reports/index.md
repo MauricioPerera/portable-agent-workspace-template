@@ -12,6 +12,8 @@ Los reportes de ejecución deben conservar los comandos ejecutados, sus códigos
 
 - [Verificación de correcciones de la versión 0.4.1](audit-fixes-2026-09-25.md).
 
+- [Portabilidad de la versión 0.4.2 con dos agentes](portability-0.4.2.md).
+
 - [Publicación del caso de uso con GLM](business-use-case.md).
 
 - [Espaciado de la página pública](page-spacing.md).

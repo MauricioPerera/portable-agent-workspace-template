@@ -14,6 +14,8 @@ def sha(path):
 
 def check(root, require_execution=True):
     errors = validate(root)
+    if errors:
+        return errors
     try:
         manifest = parse_metadata((root / 'manifest.yaml').read_text(encoding='utf-8'))
         inventory_path = root / 'proyectos/primer-uso/inventario.json'

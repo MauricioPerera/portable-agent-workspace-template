@@ -25,6 +25,6 @@ El gate de plantilla comprueba estructura, manifiesto y un inventario explícito
 1. Crea un repositorio nuevo en GitHub y sube este directorio como rama por defecto.
 2. En la configuración del repositorio, activa **Template repository**.
 3. Conserva el workflow `.github/workflows/validate.yml` para validar cada cambio.
-4. Crea releases al modificar `spec_version` o el comportamiento del scaffold.
+4. Crea releases al modificar `spec_version` o el comportamiento del scaffold. Prepara el ZIP y su checksum fuera de esta carpeta con `python scripts/package_release.py --output-dir ../release-assets`, y adjunta ambos a la release de la versión indicada en `manifest.yaml`.
 
 La vía principal para usuarios es entregar el enlace de `docs/prompt.md` publicado a su IA. El agente obtiene la distribución y ejecuta el generador. Como alternativa, los usuarios técnicos pueden seleccionar **Use this template** o descargar un ZIP y ejecutar `python scripts/init_workspace.py`. El comando funciona sin parámetros y crea una instancia vecina separada de la web y los workflows. Requiere Python 3.10 o posterior y ningún paquete de terceros.

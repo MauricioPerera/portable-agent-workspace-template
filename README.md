@@ -16,7 +16,7 @@ La IA necesita acceso a archivos y ejecución local, Python 3.10 o posterior y a
 
 ## Alternativa técnica
 
-Descarga el ZIP o clona este repositorio. Desde su raíz:
+Para una instalación reproducible usa el ZIP y el archivo SHA-256 de la release indicados en el [prompt](docs/prompt.md). También puedes clonar este repositorio para desarrollo. Desde la raíz de la distribución:
 
 ```sh
 python scripts/init_workspace.py
@@ -57,6 +57,8 @@ Para repetir su diagnóstico después de cambios: `python scripts/first_run.py`.
 Una instancia puede alojar proyectos de ventas, gastos y seguimiento. En una prueba con GLM, el agente combinó sus datos en un informe mensual y, en una sesión nueva, añadió una venta y trasladó el informe conservando los originales. Las cifras y el recálculo se verificaron independientemente.
 
 Lee el [caso documentado, método, evidencia y límites](docs/casos/negocio-glm.md). Se probó el scaffold local con datos ficticios; las herramientas del ejemplo se generaron en una instancia independiente y no vienen incluidas en la plantilla.
+
+La [prueba de portabilidad con dos agentes](reports/portability-0.4.2.md) repite la misma petición en instancias aisladas con Codex y GLM, y contrasta los resultados con un verificador independiente.
 
 ## Mantener la plantilla
 

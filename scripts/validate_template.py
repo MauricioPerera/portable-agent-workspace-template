@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 """Verify the distributor's approved file inventory, not file contents or secrets."""
 
+import ast
 import sys
 from pathlib import Path
-from validate_okf_nodes import parse_metadata
+from validate_okf_nodes import extract_frontmatter, parse_metadata
+
+TEMPLATE_VERSION = '0.4.2'
 
 
 REQUIRED = {
@@ -29,6 +32,7 @@ REQUIRED = {
     "scripts/validate_workspace.py",
     "scripts/first_run.py",
     "scripts/check_first_run.py",
+    "scripts/package_release.py",
     "tests/test_init_workspace.py",
     "tests/test_workspace_acceptance.py",
     ".github/workflows/validate.yml",
@@ -46,6 +50,7 @@ ALLOWED_EXTRA = {
     "reports/acceptance-0.4.0.md", "reports/acceptance-metrics.json",
     "reports/business-use-case.md", "reports/page-spacing.md",
     "reports/validation-0.4.0.json", "reports/audit-fixes-2026-09-25.md",
+    "reports/portability-0.4.2.md",
 }
 
 
@@ -71,11 +76,33 @@ def main() -> int:
         manifest = parse_metadata((root / 'manifest.yaml').read_text(encoding='utf-8'))
         for key, value in {'profile': 'template', 'methodology': 'file-based-kdd',
                            'spec_version': '0.2.0', 'entrypoint': 'AGENTS.md',
-                           'version': '0.4.1'}.items():
+                           'version': TEMPLATE_VERSION}.items():
             if manifest.get(key) != value:
                 errors.append(f'manifest.yaml: se requiere {key}: {value}')
     except (OSError, ValueError) as exc:
         errors.append(f'manifest.yaml: {exc}')
+    try:
+        tree = ast.parse((root / 'scripts/init_workspace.py').read_text(encoding='utf-8'))
+        versions = [node.value.value for node in tree.body
+                    if isinstance(node, ast.Assign)
+                    and any(isinstance(target, ast.Name) and target.id == 'VERSION' for target in node.targets)
+                    and isinstance(node.value, ast.Constant) and isinstance(node.value.value, str)]
+        if versions != [TEMPLATE_VERSION]:
+            errors.append(f'init_workspace.py: VERSION debe ser {TEMPLATE_VERSION}')
+    except (OSError, SyntaxError) as exc:
+        errors.append(f'init_workspace.py: {exc}')
+    try:
+        prompt = (root / 'docs/prompt.md').read_text(encoding='utf-8')
+        if extract_frontmatter(prompt).get('version') != TEMPLATE_VERSION or f'plantilla {TEMPLATE_VERSION}' not in prompt:
+            errors.append(f'docs/prompt.md: versión debe ser {TEMPLATE_VERSION}')
+        release_base = ('https://github.com/MauricioPerera/portable-agent-workspace-template/'
+                        f'releases/download/v{TEMPLATE_VERSION}/portable-agent-workspace-template-v{TEMPLATE_VERSION}')
+        if f'{release_base}.zip' not in prompt or f'{release_base}.sha256' not in prompt:
+            errors.append('docs/prompt.md: faltan ZIP y SHA-256 de la release versionada')
+        if 'archive/refs/heads/main.zip' in prompt:
+            errors.append('docs/prompt.md: la instalación no debe usar un ZIP de rama mutable')
+    except (OSError, ValueError) as exc:
+        errors.append(f'docs/prompt.md: {exc}')
     if errors:
         print("FALLO: estructura de plantilla inválida")
         for error in errors:

@@ -203,6 +203,30 @@ class AcceptanceTests(unittest.TestCase):
         source.write_text('---\ntype: Knowledge\n---\n\nValor B\n', encoding='utf-8')
         self.assertNotEqual(command([sys.executable, 'scripts/check_first_run.py'], target).returncode, 0)
 
+    def test_context_symlink_outside_workspace_is_rejected(self):
+        target = self.create()
+        outside = self.base / 'external-source.txt'
+        outside.write_text('private source', encoding='utf-8')
+        link = target / 'context/external-source.txt'
+        try:
+            link.symlink_to(outside)
+        except (OSError, NotImplementedError) as exc:
+            self.skipTest(f'Symbolic links unavailable: {exc}')
+        for script in ('validate_workspace.py', 'first_run.py', 'check_first_run.py'):
+            with self.subTest(script=script):
+                result = command([sys.executable, f'scripts/{script}'], target)
+                self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        link.unlink()
+        outside_dir = self.base / 'external-directory'
+        outside_dir.mkdir()
+        (outside_dir / 'source.txt').write_text('private source', encoding='utf-8')
+        directory_link = target / 'context/external-directory'
+        directory_link.symlink_to(outside_dir, target_is_directory=True)
+        result = command([sys.executable, 'scripts/validate_workspace.py'], target)
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        directory_link.unlink()
+        self.assertEqual(command([sys.executable, 'scripts/check_first_run.py'], target).returncode, 0)
+
     def test_real_publishing_guide_roundtrip(self):
         target = self.create('Publicación real')
         original = (ROOT / 'PUBLISHING.md').read_bytes()
@@ -283,6 +307,51 @@ class AcceptanceTests(unittest.TestCase):
                 self.assertNotEqual(result.returncode, 0)
                 self.assertIn('Archivo no autorizado', result.stdout)
                 path.unlink()
+
+    def test_template_rejects_version_drift_and_mutable_download(self):
+        version = parse_metadata((ROOT / 'manifest.yaml').read_text(encoding='utf-8'))['version']
+        cases = (
+            ('manifest.yaml', f'version: {version}', 'version: 9.9.9'),
+            ('scripts/init_workspace.py', f"VERSION = '{version}'", "VERSION = '9.9.9'"),
+            ('scripts/validate_template.py', f"TEMPLATE_VERSION = '{version}'", "TEMPLATE_VERSION = '9.9.9'"),
+            ('docs/prompt.md', f"version: '{version}'", "version: '9.9.9'"),
+            ('docs/prompt.md', '.sha256)', '.unchecked)'),
+            ('docs/prompt.md', f'/download/v{version}/', '/archive/refs/heads/main.zip'),
+        )
+        for index, (relative, old, new) in enumerate(cases):
+            with self.subTest(path=relative, change=index):
+                copy = self.copy_distribution(self.base / f'version-drift-{index}')
+                path = copy / relative
+                content = path.read_text(encoding='utf-8')
+                self.assertIn(old, content)
+                path.write_text(content.replace(old, new, 1), encoding='utf-8')
+                self.assertNotEqual(command([sys.executable, 'scripts/validate_template.py'], copy).returncode, 0)
+
+    def test_release_package_matches_checksum_and_runs_scaffold(self):
+        distribution = self.copy_distribution(self.base / 'distribution')
+        output = self.base / 'release-assets'
+        build = command([sys.executable, 'scripts/package_release.py', '--output-dir', str(output)], distribution)
+        self.assertEqual(build.returncode, 0, build.stdout + build.stderr)
+        version = parse_metadata((distribution / 'manifest.yaml').read_text(encoding='utf-8'))['version']
+        stem = f'portable-agent-workspace-template-v{version}'
+        archive = output / f'{stem}.zip'
+        checksum = output / f'{stem}.sha256'
+        digest, filename = checksum.read_text(encoding='ascii').split()
+        self.assertEqual(filename, archive.name)
+        self.assertEqual(digest, hashlib.sha256(archive.read_bytes()).hexdigest())
+        with zipfile.ZipFile(archive) as bundle:
+            names = bundle.namelist()
+            self.assertTrue(names)
+            self.assertTrue(all(name.startswith(stem + '/') for name in names))
+            bundle.extractall(self.base / 'extracted')
+        extracted = self.base / 'extracted' / stem
+        self.assertEqual(command([sys.executable, 'scripts/validate_template.py'], extracted).returncode, 0)
+        generated = self.base / 'generated'
+        create = command([sys.executable, 'scripts/init_workspace.py', '--destination', str(generated)], extracted)
+        self.assertEqual(create.returncode, 0, create.stdout + create.stderr)
+        self.assertEqual(command([sys.executable, 'scripts/check_first_run.py'], generated).returncode, 0)
+        self.assertNotEqual(hashlib.sha256(archive.read_bytes() + b'tampered').hexdigest(), digest)
+        self.assertNotEqual(command([sys.executable, 'scripts/package_release.py', '--output-dir', str(output)], distribution).returncode, 0)
 
 
 class NodeRegressionTests(unittest.TestCase):
