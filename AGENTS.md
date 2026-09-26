@@ -43,6 +43,8 @@ Las correcciones del usuario se registran en `memoria/log_sesiones.md`. Las pref
 
 Antes de modificar archivos, identificar el contrato aplicable. Preservar los archivos de entrada del usuario y registrar la evidencia de ejecución en `reports/` cuando exista un entregable.
 
+En el distribuidor, los cambios a contratos, oráculos, inicializador, workflows o publicación requieren revisión independiente del SHA exacto del PR según [trusted-changes](contracts/trusted-changes.md). Una aprobación anterior no cubre commits posteriores.
+
 ## Capas del workspace
 
 - `context/`: conocimiento estático y fuentes de verdad.

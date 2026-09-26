@@ -194,6 +194,43 @@ class AcceptanceTests(unittest.TestCase):
         self.assertEqual(command([sys.executable, 'scripts/first_run.py'], target).returncode, 0)
         self.assertEqual(command([sys.executable, 'scripts/check_first_run.py'], target).returncode, 0)
 
+    def test_skill_and_contract_indexes_match_files(self):
+        target = self.create()
+        (target / 'skills/extra.md').write_text(
+            '---\ntype: Skill\nname: extra\nversion: 1.0.0\n'
+            "contract: '../contracts/extra.md'\n"
+            "test_command: 'python scripts/check_first_run.py'\n---\n# Extra\n",
+            encoding='utf-8',
+        )
+        (target / 'contracts/extra.md').write_text(
+            '---\ntype: Task Contract\nname: extra\nversion: 1.0.0\n'
+            'inputs: none\noutputs: none\nscope: local\n'
+            "test_command: 'python scripts/check_first_run.py'\n---\n# Extra\n",
+            encoding='utf-8',
+        )
+        result = command([sys.executable, 'scripts/validate_workspace.py'], target)
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn('Unindexed', result.stdout)
+        with (target / 'skills/index.md').open('a', encoding='utf-8') as stream:
+            stream.write('\n- [Extra](extra.md)\n')
+        with (target / 'contracts/index.md').open('a', encoding='utf-8') as stream:
+            stream.write('\n- [Extra](extra.md)\n')
+        result = command([sys.executable, 'scripts/validate_workspace.py'], target)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        with (target / 'skills/index.md').open('a', encoding='utf-8') as stream:
+            stream.write('\n- [Duplicada](extra.md)\n')
+        result = command([sys.executable, 'scripts/validate_workspace.py'], target)
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn('Duplicate', result.stdout)
+        (target / 'skills/index.md').write_text(
+            (target / 'skills/index.md').read_text(encoding='utf-8').replace(
+                '- [Duplicada](extra.md)', '- [Sobrante](../README.md)'),
+            encoding='utf-8',
+        )
+        result = command([sys.executable, 'scripts/validate_workspace.py'], target)
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn('Unexpected', result.stdout)
+
     def test_nested_index_source_content_is_tracked(self):
         target = self.create()
         source = target / 'context/proveedor/index.md'

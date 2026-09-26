@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 from validate_okf_nodes import extract_frontmatter, parse_metadata
 
-TEMPLATE_VERSION = '0.4.4'
+TEMPLATE_VERSION = '0.4.5'
 
 
 REQUIRED = {
@@ -22,6 +22,7 @@ REQUIRED = {
     "skills/index.md",
     "contracts/index.md",
     "contracts/init-workspace.md",
+    "contracts/trusted-changes.md",
     "memoria/log_sesiones.md",
     "memoria/preferencias_consolidadas.md",
     "proyectos/.gitkeep",
@@ -33,9 +34,12 @@ REQUIRED = {
     "scripts/first_run.py",
     "scripts/check_first_run.py",
     "scripts/package_release.py",
+    "scripts/guard_pr_change.py",
     "tests/test_init_workspace.py",
     "tests/test_workspace_acceptance.py",
+    "tests/test_guard_pr_change.py",
     ".github/workflows/validate.yml",
+    ".github/workflows/trusted-pr-gate.yml",
     ".github/workflows/pages.yml",
     "docs/index.html",
     "docs/prompt.md",
