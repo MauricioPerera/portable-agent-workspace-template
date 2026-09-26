@@ -12,7 +12,7 @@ El distribuidor tiene `profile: template`: contiene generador, tests, web y work
 
 ## Instancia mínima
 
-- `AGENTS.md`, `WORKSPACE-SPEC.md`, `README.md`, `manifest.yaml`, `LICENSE`, `.gitignore` y adaptadores delgados.
+- `AGENTS.md`, `WORKSPACE-SPEC.md`, `README.md`, `manifest.yaml`, `LICENSE`, `.gitignore`, `.gitattributes` y adaptadores delgados.
 - `context/index.md`, `skills/index.md`, `contracts/index.md` y `reports/index.md`.
 - `memoria/log_sesiones.md` y `memoria/preferencias_consolidadas.md`.
 - `proyectos/entradas/.gitkeep`: conserva la carpeta al transportarla por Git. Los originales en esta carpeta quedan excluidos del formato de nodos.

@@ -46,6 +46,6 @@ La equivalencia probada es la de los comandos y sus artefactos. No es un benchma
 
 La validación de Markdown cubre el subconjunto declarado, no CommonMark/YAML completos. No certifica veracidad de fuentes, ausencia de secretos ni autenticidad contra un actor que pueda cambiar código y evidencia conjuntamente. Los tests de dominio siguen siendo responsabilidad de cada contrato futuro.
 
-## Estado de entrega
+## Estado de entrega al redactar este informe (0.4.0)
 
-Cambios preparados en una rama local y revisables. La publicación de la revisión es una acción separada: mientras no se integre en la rama publicada, el enlace remoto conserva la versión anterior. No se migraron ni sobrescribieron instancias existentes.
+En el momento de esta aceptación de la versión 0.4.0, los cambios estaban preparados en una rama local y eran revisables. La publicación de aquella revisión era una acción separada: mientras no se integrara en la rama publicada, el enlace remoto conservaba la versión anterior. No se migraron ni sobrescribieron instancias existentes. Este párrafo registra el estado de entonces; para conocer la versión vigente, consulta `manifest.yaml` y `docs/prompt.md`.
