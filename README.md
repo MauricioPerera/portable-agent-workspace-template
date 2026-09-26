@@ -5,7 +5,7 @@ title: 'Portable Agent Workspace Template'
 
 # De un prompt a un workspace funcional
 
-Entrega a tu IA el enlace al [prompt](https://mauricioperera.github.io/portable-agent-workspace-template/prompt.md). Tu agente obtiene la plantilla, crea tu workspace, ejecuta una primera tarea y comprueba su resultado. No necesitas conocer Git ni la estructura interna.
+Entrega a tu IA el enlace al prompt que aparece abajo. Puedes [leerlo en GitHub](https://github.com/MauricioPerera/portable-agent-workspace-template/blob/main/docs/prompt.md). Tu agente obtiene la plantilla, crea tu workspace, ejecuta una primera tarea y comprueba su resultado. No necesitas conocer Git ni la estructura interna.
 
 ```text
 Lee y sigue este prompt para crear y usar mi Portable Agent Workspace:

@@ -10,3 +10,5 @@
 .section-note{margin:var(--content-space) 0 1rem;max-width:80ch;color:var(--muted)}
 .code-card{min-width:0}
 .code-card pre{overflow-wrap:anywhere}
+button.button-primary{color:#052119}
+@media(max-width:760px){.site-header{padding-top:.5rem}.site-header nav{display:flex;grid-column:1/-1;grid-row:2;justify-content:space-between;gap:.8rem;overflow-x:auto;white-space:nowrap;padding:.2rem 0 .8rem}}

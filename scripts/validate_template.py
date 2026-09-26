@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 from validate_okf_nodes import extract_frontmatter, parse_metadata
 
-TEMPLATE_VERSION = '0.4.3'
+TEMPLATE_VERSION = '0.4.4'
 
 
 REQUIRED = {
