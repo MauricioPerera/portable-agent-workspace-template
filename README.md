@@ -77,3 +77,5 @@ Las pruebas ejecutan los comandos del prompt desde un ZIP temporal, comparan el 
 Actualizar una instancia: generar otra carpeta, comparar scripts/reglas y trasladar mejoras preservando memoria, contratos e insumos. La versión y digest de origen quedan en el manifiesto; no hay actualización destructiva automática.
 
 Distribución bajo [MIT](LICENSE). Ver [publicación](PUBLISHING.md) y [prompt incluido](docs/prompt.md).
+
+<!-- temporary CI smoke check; this branch will not be merged -->
