@@ -6,6 +6,8 @@ date: '2026-09-25'
 
 # Portabilidad con dos agentes
 
+El [repositorio independiente de evidencia](https://github.com/MauricioPerera/portable-agent-workspace-template-portability-evidence) publica el brief y los CSV ficticios originales, ambas instancias resultantes, el verificador externo y su salida. Desde una copia de ese repositorio, `python verify_results.py` repite la comprobación de los resultados guardados. Su README explica cómo repetir el encargo con otros agentes. Los archivos permiten comprobar resultados y hashes, pero no contienen transcripciones completas que autentiquen la identidad de cada modelo.
+
 Se entregó el mismo brief y los mismos dos CSV ficticios a dos agentes en carpetas aisladas, cada una con una copia idéntica de la distribución 0.4.2. El brief y las entradas no se modificaron durante las pruebas. La tarea exigía generar una instancia, conservar originales, calcular un resumen mensual entre proyectos, añadir una venta, trasladar el resumen y su script, crear una skill con contrato y comprobar el resultado.
 
 | Agente | Entorno | Resultado |

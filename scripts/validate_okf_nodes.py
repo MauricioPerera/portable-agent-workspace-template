@@ -140,6 +140,41 @@ def audit(root: Path) -> tuple[list[str], int]:
             errors.append(f'{relative.as_posix()}: {exc}')
     if count == 0:
         errors.append('No managed Markdown nodes found')
+    for folder, required_type in (('skills', 'Skill'), ('contracts', 'Task Contract')):
+        index = root / folder / 'index.md'
+        if not index.is_file():
+            continue  # The template/workspace structure validator reports missing indexes.
+        actual = {path.resolve() for path in (root / folder).glob('*.md') if path != index}
+        for nested in (root / folder).rglob('*.md'):
+            if nested.parent != index.parent:
+                errors.append(f'Nested {folder} file is unsupported: {nested.relative_to(root).as_posix()}')
+        indexed = []
+        try:
+            for link in find_markdown_links(index.read_text(encoding='utf-8')):
+                target = local_target(root, index, link)
+                if target is None:
+                    errors.append(f'Unexpected {folder} index entry: {link}')
+                else:
+                    indexed.append(target)
+        except (OSError, ValueError) as exc:
+            errors.append(f'{folder}/index.md: {exc}')
+            continue
+        seen = set()
+        for target in indexed:
+            if target in seen:
+                errors.append(f'Duplicate {folder} index entry: {target.relative_to(root).as_posix()}')
+            seen.add(target)
+            if target not in actual:
+                errors.append(f'Unexpected {folder} index entry: {target.relative_to(root).as_posix()}')
+        for target in sorted(actual - seen):
+            errors.append(f'Unindexed {folder} file: {target.relative_to(root).as_posix()}')
+        for target in sorted(actual):
+            try:
+                kind = extract_frontmatter(target.read_text(encoding='utf-8')).get('type')
+                if kind != required_type:
+                    errors.append(f'{target.relative_to(root).as_posix()}: expected type {required_type}')
+            except (OSError, ValueError) as exc:
+                errors.append(f'{target.relative_to(root).as_posix()}: {exc}')
     return errors, count
 
 def validate_repository(root_dir: Path):

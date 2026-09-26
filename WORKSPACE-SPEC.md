@@ -36,6 +36,8 @@ La instancia rechaza enlaces simbólicos dentro de `context/`, incluidos los que
 
 Una skill usa `type: Skill`, `name`, `version`, `contract` (ruta relativa al documento) y `test_command`. El contrato usa `type: Task Contract`, `name`, `version`, `inputs`, `outputs`, `scope` y `test_command`. Todos son strings no vacíos. Skill y contrato deben coincidir en el comando. El comando se ejecuta desde la raíz con el Python disponible; sustituir `python` por `python3`, `py -3` o una ruta absoluta si corresponde.
 
+Las skills y los contratos administrados son archivos Markdown directos de `skills/` y `contracts/`. Sus índices respectivos deben enlazar una vez a cada archivo y no enlazar archivos ajenos; los subdirectorios en estas dos capas no están admitidos. `validate_okf_nodes.py` y `validate_workspace.py` rechazan omisiones, duplicados y entradas sobrantes.
+
 Los validadores inspeccionan metadatos y archivos; no ejecutan automáticamente comandos de contratos. El agente revisa procedencia y alcance, ejecuta la prueba aplicable y registra su código real. Las tareas abiertas pueden exigir revisión humana complementaria. Un contrato no convierte una prueba débil en prueba de corrección universal.
 
 ## Primer uso
