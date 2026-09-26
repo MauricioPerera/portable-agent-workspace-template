@@ -6,6 +6,8 @@ date: '2026-09-25'
 
 # Verificación de correcciones de la auditoría
 
+Versión de plantilla: 0.4.1. Versión de especificación: 0.2.0.
+
 Se creó una instancia nueva con Python 3.14.6 en Windows y se importó el documento real de esta distribución, `PUBLISHING.md`, como fuente en `context/guia-publicacion.md`. Una copia byte a byte quedó en `proyectos/entradas/`. El SHA-256 del original fue `56e4746230213730ec762ab72dcbf024e10291c16000ddae91fc8b362a52436f`.
 
 | Paso | Código observado | Resultado |

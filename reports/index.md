@@ -10,6 +10,8 @@ Los reportes de ejecución deben conservar los comandos ejecutados, sus códigos
 
 - [Aceptación de la versión 0.4.0](acceptance-0.4.0.md).
 
+- [Verificación de correcciones de la versión 0.4.1](audit-fixes-2026-09-25.md).
+
 - [Publicación del caso de uso con GLM](business-use-case.md).
 
 - [Espaciado de la página pública](page-spacing.md).

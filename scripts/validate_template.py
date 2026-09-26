@@ -71,7 +71,7 @@ def main() -> int:
         manifest = parse_metadata((root / 'manifest.yaml').read_text(encoding='utf-8'))
         for key, value in {'profile': 'template', 'methodology': 'file-based-kdd',
                            'spec_version': '0.2.0', 'entrypoint': 'AGENTS.md',
-                           'version': '0.4.0'}.items():
+                           'version': '0.4.1'}.items():
             if manifest.get(key) != value:
                 errors.append(f'manifest.yaml: se requiere {key}: {value}')
     except (OSError, ValueError) as exc:
