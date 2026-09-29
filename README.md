@@ -60,6 +60,10 @@ Lee el [caso documentado, método, evidencia y límites](docs/casos/negocio-glm.
 
 La [prueba de portabilidad con dos agentes](reports/portability-0.4.2.md) repite la misma petición en instancias aisladas con Codex y GLM, y contrasta los resultados con un verificador independiente.
 
+## Automatizar flujos con código propio
+
+El repositorio incluye un [SDK opcional de flujos](docs/workflow-sdk.md). Permite definir tareas JavaScript y sus contratos sin construir pieces o nodos predefinidos. Su CLI descubre operaciones, muestra esquemas, valida definiciones y prepara planes antes de verificar, publicar y ejecutar un artefacto. El workspace mínimo sigue requiriendo únicamente Python; Node y el sandbox Linux solo se necesitan al usar el SDK.
+
 ## Mantener la plantilla
 
 Este repositorio es el **distribuidor**. «Use this template» copia el distribuidor, no reemplaza el paso de inicialización. Su web, tests y workflows no se copian a la instancia. Los datos y ejemplos de dominio viven en repositorios independientes.

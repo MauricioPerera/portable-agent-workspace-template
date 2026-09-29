@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "flowId": "preparar-texto",
+  "objective": "Normalizar espacios exteriores y mayúsculas; contar palabras separadas por espacios, conservando texto y caracteres Unicode.",
+  "maxLimits": { "timeoutMs": 3000, "memoryMb": 128, "outputBytes": 16384 },
+  "maxMedianMs": 10000,
+  "taskCases": {
+    "normalizar": [
+      { "id": "espacios-unicode", "input": { "texto": "  ÁRBOL Azul  " }, "expected": { "texto": "árbol azul" } },
+      { "id": "vacio", "input": { "texto": "   " }, "expected": { "texto": "" } },
+      { "id": "rechaza-numero", "input": { "texto": 42 }, "expectError": true, "expectErrorCode": "SCHEMA_INVALID" }
+    ],
+    "contar": [
+      { "id": "separadores", "input": { "texto": "uno\tdos\ntres" }, "expected": { "palabras": 3 } },
+      { "id": "vacio", "input": { "texto": "" }, "expected": { "palabras": 0 } },
+      { "id": "rechaza-campo-extra", "input": { "texto": "hola", "extra": true }, "expectError": true, "expectErrorCode": "SCHEMA_INVALID" }
+    ]
+  },
+  "flowCases": [
+    { "id": "unicode", "input": { "texto": "  ÁRBOL Azul  " }, "expected": { "texto": "árbol azul", "palabras": 2 } },
+    { "id": "vacio", "input": { "texto": "   " }, "expected": { "texto": "", "palabras": 0 } },
+    { "id": "rechaza-numero", "input": { "texto": 42 }, "expectError": true, "expectErrorCode": "SCHEMA_INVALID" }
+  ]
+}

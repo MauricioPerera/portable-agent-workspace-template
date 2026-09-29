@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 from validate_okf_nodes import extract_frontmatter, parse_metadata
 
-TEMPLATE_VERSION = '0.4.5'
+TEMPLATE_VERSION = '0.4.6'
 
 
 REQUIRED = {
@@ -55,6 +55,16 @@ ALLOWED_EXTRA = {
     "reports/business-use-case.md", "reports/page-spacing.md",
     "reports/validation-0.4.0.json", "reports/audit-fixes-2026-09-25.md",
     "reports/portability-0.4.2.md",
+    "docs/workflow-sdk.md",
+}
+
+WORKFLOW_SDK_FILES = {
+    'package.json', 'package-lock.json', '.gitignore', 'README.md', 'RESULTADOS-CLI.md', 'NOTICE.md',
+    'packages/activepieces-engine-standalone-0.1.0.tgz',
+    'src/catalog.mjs', 'src/cli.mjs', 'src/definition.mjs', 'src/diagnostics.mjs', 'src/index.mjs',
+    'src/lock-holder.cjs', 'src/runtime.mjs', 'src/sandbox.mjs', 'src/schema.mjs', 'src/worker.cjs',
+    'test/cli.test.mjs', 'test/diagnostics.test.mjs', 'test/sdk.test.mjs',
+    'examples/flow.json', 'examples/build-definition.mjs', 'examples/input.json', 'examples/policy.json',
 }
 
 
@@ -65,10 +75,10 @@ def main() -> int:
     for relative in sorted(REQUIRED):
         if not (root / relative).is_file():
             errors.append(f"Falta artefacto requerido: {relative}")
-    allowed_files = REQUIRED | ALLOWED_EXTRA
+    allowed_files = REQUIRED | ALLOWED_EXTRA | {'extensions/workflow-sdk/' + path for path in WORKFLOW_SDK_FILES}
     for path in root.rglob('*'):
         relative = path.relative_to(root)
-        if '.git' in relative.parts or (relative.suffix == '.pyc' and '__pycache__' in relative.parts):
+        if '.git' in relative.parts or relative.parts[:3] == ('extensions', 'workflow-sdk', 'node_modules') or (relative.suffix == '.pyc' and '__pycache__' in relative.parts):
             continue
         if path.is_symlink():
             errors.append(f"Enlace simbólico no autorizado en plantilla: {relative.as_posix()}")

@@ -7,7 +7,7 @@ import sys
 import zipfile
 
 from validate_okf_nodes import audit
-from validate_template import ALLOWED_EXTRA, REQUIRED, TEMPLATE_VERSION, main as validate_template
+from validate_template import ALLOWED_EXTRA, REQUIRED, WORKFLOW_SDK_FILES, TEMPLATE_VERSION, main as validate_template
 
 
 def package(root: Path, output_dir: Path) -> tuple[Path, Path]:
@@ -27,7 +27,7 @@ def package(root: Path, output_dir: Path) -> tuple[Path, Path]:
     if archive.exists() or checksum.exists():
         raise FileExistsError('La release ya existe en el directorio de salida.')
     with zipfile.ZipFile(archive, 'w', compression=zipfile.ZIP_DEFLATED, compresslevel=9) as bundle:
-        for relative in sorted(REQUIRED | ALLOWED_EXTRA):
+        for relative in sorted(REQUIRED | ALLOWED_EXTRA | {'extensions/workflow-sdk/' + path for path in WORKFLOW_SDK_FILES}):
             source = root / relative
             if not source.is_file() or source.is_symlink():
                 raise ValueError(f'Archivo de distribución ausente o simbólico: {relative}')
