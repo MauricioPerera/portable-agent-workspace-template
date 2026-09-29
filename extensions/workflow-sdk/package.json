@@ -1,0 +1,13 @@
+{
+  "name": "portable-workflow-sdk",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.mjs",
+  "bin": { "workspace-flow": "./src/cli.mjs" },
+  "engines": { "node": ">=22" },
+  "scripts": { "test": "node --test test/*.test.mjs" },
+  "dependencies": {
+    "activepieces-engine-standalone": "file:packages/activepieces-engine-standalone-0.1.0.tgz"
+  }
+}

@@ -1,0 +1,221 @@
+{
+  "id": "clasificar-textos",
+  "input": {
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "maxLength": 64,
+        "minLength": 1,
+        "type": "string"
+      },
+      "texto": {
+        "maxLength": 4096,
+        "type": "string"
+      }
+    },
+    "required": [
+      "id",
+      "texto"
+    ],
+    "type": "object"
+  },
+  "objective": "Clasificar textos por prioridad en urgente, normal y revisión; conservar el identificador; respetar negaciones explícitas de urgencia y marcar textos vacíos, incertidumbre o señales contradictorias para revisión; exponer las reglas aplicadas.",
+  "output": {
+    "categoria": {
+      "$ref": "categorizar.categoria"
+    },
+    "id": {
+      "$ref": "input.id"
+    },
+    "reglas_aplicadas": {
+      "$ref": "categorizar.reglas_aplicadas"
+    },
+    "requiere_revision": {
+      "$ref": "categorizar.requiere_revision"
+    },
+    "texto_normalizado": {
+      "$ref": "limpiar.texto_normalizado"
+    }
+  },
+  "outputSchema": {
+    "additionalProperties": false,
+    "properties": {
+      "categoria": {
+        "enum": [
+          "urgente",
+          "normal",
+          "revisión"
+        ],
+        "type": "string"
+      },
+      "id": {
+        "maxLength": 64,
+        "minLength": 1,
+        "type": "string"
+      },
+      "reglas_aplicadas": {
+        "items": {
+          "enum": [
+            "urgente.explicita",
+            "urgente.inmediata",
+            "urgente.bloqueo",
+            "urgente.caida",
+            "normal.sin_urgencia",
+            "normal.sin_prisa",
+            "revision.incertidumbre",
+            "revision.conflicto",
+            "revision.vacio"
+          ],
+          "type": "string"
+        },
+        "maxItems": 9,
+        "type": "array"
+      },
+      "requiere_revision": {
+        "type": "boolean"
+      },
+      "texto_normalizado": {
+        "maxLength": 8192,
+        "type": "string"
+      }
+    },
+    "required": [
+      "id",
+      "texto_normalizado",
+      "categoria",
+      "requiere_revision",
+      "reglas_aplicadas"
+    ],
+    "type": "object"
+  },
+  "schemaVersion": 1,
+  "steps": [
+    {
+      "id": "limpiar",
+      "task": "normalizar",
+      "with": {
+        "texto": {
+          "$ref": "input.texto"
+        }
+      }
+    },
+    {
+      "id": "categorizar",
+      "task": "clasificar",
+      "with": {
+        "texto_normalizado": {
+          "$ref": "limpiar.texto_normalizado"
+        }
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "id": "normalizar",
+      "input": {
+        "additionalProperties": false,
+        "properties": {
+          "texto": {
+            "maxLength": 4096,
+            "type": "string"
+          }
+        },
+        "required": [
+          "texto"
+        ],
+        "type": "object"
+      },
+      "language": "javascript",
+      "limits": {
+        "memoryMb": 128,
+        "outputBytes": 16384,
+        "timeoutMs": 3000
+      },
+      "output": {
+        "additionalProperties": false,
+        "properties": {
+          "texto_normalizado": {
+            "maxLength": 8192,
+            "type": "string"
+          }
+        },
+        "required": [
+          "texto_normalizado"
+        ],
+        "type": "object"
+      },
+      "permissions": {
+        "filesystem": false,
+        "network": false
+      },
+      "source": "module.exports = ({ texto }) => ({\n    texto_normalizado: texto.normalize('NFC').trim().replace(/\\s+/gu, ' ').toLowerCase()\n});\n"
+    },
+    {
+      "id": "clasificar",
+      "input": {
+        "additionalProperties": false,
+        "properties": {
+          "texto_normalizado": {
+            "maxLength": 8192,
+            "type": "string"
+          }
+        },
+        "required": [
+          "texto_normalizado"
+        ],
+        "type": "object"
+      },
+      "language": "javascript",
+      "limits": {
+        "memoryMb": 128,
+        "outputBytes": 16384,
+        "timeoutMs": 3000
+      },
+      "output": {
+        "additionalProperties": false,
+        "properties": {
+          "categoria": {
+            "enum": [
+              "urgente",
+              "normal",
+              "revisión"
+            ],
+            "type": "string"
+          },
+          "reglas_aplicadas": {
+            "items": {
+              "enum": [
+                "urgente.explicita",
+                "urgente.inmediata",
+                "urgente.bloqueo",
+                "urgente.caida",
+                "normal.sin_urgencia",
+                "normal.sin_prisa",
+                "revision.incertidumbre",
+                "revision.conflicto",
+                "revision.vacio"
+              ],
+              "type": "string"
+            },
+            "maxItems": 9,
+            "type": "array"
+          },
+          "requiere_revision": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "categoria",
+          "requiere_revision",
+          "reglas_aplicadas"
+        ],
+        "type": "object"
+      },
+      "permissions": {
+        "filesystem": false,
+        "network": false
+      },
+      "source": "module.exports = ({ texto_normalizado }) => {\n    const texto = texto_normalizado.normalize('NFD').replace(/\\p{M}/gu, '').toLowerCase();\n    const sinUrgencia = /\\b(no es urgente|no urgente|no hay urgencia|sin urgencia)\\b/gu;\n    const negada = sinUrgencia.test(texto);\n    sinUrgencia.lastIndex = 0;\n    const sinNegaciones = texto.replace(sinUrgencia, ' ');\n    const reglasUrgentes = [\n        ['urgente.explicita', /\\b(urgente|urgencia|urgentemente)\\b/u],\n        ['urgente.inmediata', /\\b(inmediato|inmediata|inmediatamente|cuanto antes|no puede esperar)\\b/u],\n        ['urgente.bloqueo', /\\b(bloqueado|bloqueada|no puedo trabajar)\\b/u],\n        ['urgente.caida', /\\b(servicio caido|sistema caido|sistema fuera de servicio)\\b/u]\n    ];\n    const aplicadas = reglasUrgentes.filter(([, patron]) => patron.test(sinNegaciones)).map(([id]) => id);\n    const urgente = aplicadas.length > 0;\n    if (negada) aplicadas.push('normal.sin_urgencia');\n    const sinPrisa = /\\b(sin prisa|cuando puedas|puede esperar)\\b/u.test(texto.replace(/\\bno puede esperar\\b/gu, ' '));\n    if (sinPrisa) aplicadas.push('normal.sin_prisa');\n    const incierta = /\\b(no se si|quizas|tal vez|puede que)\\b|\\burgente\\s*\\?/u.test(texto);\n    if (incierta) aplicadas.push('revision.incertidumbre');\n    const contradictoria = urgente && (negada || sinPrisa);\n    if (contradictoria) aplicadas.push('revision.conflicto');\n    const vacia = texto.trim().length === 0;\n    if (vacia) aplicadas.push('revision.vacio');\n    const revisar = incierta || contradictoria || vacia;\n    return {\n        categoria: revisar ? 'revisión' : urgente ? 'urgente' : 'normal',\n        requiere_revision: revisar,\n        reglas_aplicadas: aplicadas\n    };\n};\n"
+    }
+  ]
+}

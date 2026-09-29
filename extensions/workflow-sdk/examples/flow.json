@@ -1,0 +1,146 @@
+{
+  "id": "preparar-texto",
+  "input": {
+    "additionalProperties": false,
+    "properties": {
+      "texto": {
+        "maxLength": 4096,
+        "type": "string"
+      }
+    },
+    "required": [
+      "texto"
+    ],
+    "type": "object"
+  },
+  "objective": "Normalizar espacios exteriores y mayúsculas; contar palabras separadas por espacios, conservando texto y caracteres Unicode.",
+  "output": {
+    "palabras": {
+      "$ref": "medir.palabras"
+    },
+    "texto": {
+      "$ref": "limpiar.texto"
+    }
+  },
+  "outputSchema": {
+    "additionalProperties": false,
+    "properties": {
+      "palabras": {
+        "minimum": 0,
+        "type": "integer"
+      },
+      "texto": {
+        "maxLength": 4096,
+        "type": "string"
+      }
+    },
+    "required": [
+      "texto",
+      "palabras"
+    ],
+    "type": "object"
+  },
+  "schemaVersion": 1,
+  "steps": [
+    {
+      "id": "limpiar",
+      "task": "normalizar",
+      "with": {
+        "texto": {
+          "$ref": "input.texto"
+        }
+      }
+    },
+    {
+      "id": "medir",
+      "task": "contar",
+      "with": {
+        "texto": {
+          "$ref": "limpiar.texto"
+        }
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "id": "normalizar",
+      "input": {
+        "additionalProperties": false,
+        "properties": {
+          "texto": {
+            "maxLength": 4096,
+            "type": "string"
+          }
+        },
+        "required": [
+          "texto"
+        ],
+        "type": "object"
+      },
+      "language": "javascript",
+      "limits": {
+        "memoryMb": 128,
+        "outputBytes": 16384,
+        "timeoutMs": 3000
+      },
+      "output": {
+        "additionalProperties": false,
+        "properties": {
+          "texto": {
+            "maxLength": 4096,
+            "type": "string"
+          }
+        },
+        "required": [
+          "texto"
+        ],
+        "type": "object"
+      },
+      "permissions": {
+        "filesystem": false,
+        "network": false
+      },
+      "source": "module.exports = async ({ texto }) => ({ texto: texto.trim().toLowerCase() });"
+    },
+    {
+      "id": "contar",
+      "input": {
+        "additionalProperties": false,
+        "properties": {
+          "texto": {
+            "maxLength": 4096,
+            "type": "string"
+          }
+        },
+        "required": [
+          "texto"
+        ],
+        "type": "object"
+      },
+      "language": "javascript",
+      "limits": {
+        "memoryMb": 128,
+        "outputBytes": 16384,
+        "timeoutMs": 3000
+      },
+      "output": {
+        "additionalProperties": false,
+        "properties": {
+          "palabras": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "palabras"
+        ],
+        "type": "object"
+      },
+      "permissions": {
+        "filesystem": false,
+        "network": false
+      },
+      "source": "module.exports = ({ texto }) => ({ palabras: texto.split(/\\s+/u).filter(Boolean).length });"
+    }
+  ]
+}
