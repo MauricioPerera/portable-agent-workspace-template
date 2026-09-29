@@ -22,11 +22,11 @@ No se añadieron servicios, autenticación ni dependencia de Cloudflare. Los pla
 
 | Entorno | Comando | Exit | Resultado |
 | --- | --- | --- | --- |
-| Windows, Node 24.16.0 | `npm.cmd test` desde este SDK | 0 | 39 pruebas: 27 correctas, 12 operativas omitidas, 0 fallos; 5,64 s |
-| VPS Linux, Node 22.22.2 | `npm --prefix /tmp/workflow-cli-20260929 ci --ignore-scripts --no-audit --no-fund` | 0 | 60 paquetes instalados |
-| VPS Linux, Node 22.22.2 | `npm --prefix /tmp/workflow-cli-20260929 test` | 0 | 39 correctas, 0 omitidas, 0 fallos; 49,68 s |
+| Windows, Node 24.16.0 | `npm.cmd test` desde la extensión | 0 | 19 pruebas: 11 correctas, 8 operativas omitidas, 0 fallos; 5,95 s |
+| VPS Linux, Node 22.22.2 | `npm --prefix /tmp/workflow-sdk-core-pr6 ci --ignore-scripts --no-audit --no-fund` | 0 | 60 paquetes instalados |
+| VPS Linux, Node 22.22.2 | `npm --prefix /tmp/workflow-sdk-core-pr6 test` | 0 | 19 correctas, 0 omitidas, 0 fallos; 17,73 s |
 
-La prueba Linux utilizó una copia nueva en `/tmp/workflow-cli-20260929` y registros temporales eliminados por las pruebas. Las instalaciones anteriores del SDK y sus artefactos se conservaron. No se creó un servicio permanente.
+La prueba Linux utilizó una copia nueva en `/tmp/workflow-sdk-core-pr6` y registros temporales eliminados por las pruebas. Las instalaciones anteriores del SDK y sus artefactos se conservaron. No se creó un servicio permanente. Esta distribución contiene el núcleo genérico: los casos de clasificación y sus evaluaciones permanecen fuera de la plantilla.
 
 ### Casos específicos de la nueva CLI
 
@@ -37,7 +37,7 @@ La prueba Linux utilizó una copia nueva en `/tmp/workflow-cli-20260929` y regis
 3. Obtener planes de fuentes que lanzarían un error al ejecutarse, sin ejecutar dichas fuentes ni crear destinos de evidencia o registro.
 4. En Linux, publicar tras verificar, planificar sin crear estado, rechazar un registro inexistente sin crearlo, ejecutar dos pasos, recuperar sin nuevas invocaciones y rechazar un artefacto alterado.
 
-La suite existente también pasó: aislamiento de archivos, credenciales, procesos y red; límites de memoria, tiempo y salida; puertas de calidad y evaluación; recuperación tras caída y bloqueo concurrente.
+La suite del núcleo también pasó: aislamiento de archivos, credenciales, procesos y red; límites de memoria, tiempo y salida; aceptación funcional, recuperación tras caída y bloqueo concurrente.
 
 La primera prueba de descubrimiento detectó que una coincidencia en la descripción podía desplazar el nombre exacto de la operación. Se corrigió su prioridad y se ejecutó de nuevo la suite completa en ambos entornos.
 

@@ -17,7 +17,7 @@ SDK funcional para definir cadenas de tareas JavaScript propias sin usar un cat�
 
 Las cadenas son lineales. No se implementaron ramas, bucles, Python, dependencias aportadas por tareas, red, archivos del workspace, credenciales ni efectos externos. El SDK puede consumir una definición producida por cualquier IA; este hito no incluye una integración con un proveedor de modelos ni un ciclo autónomo de reparación.
 
-El ejemplo de clasificación incorpora una [puerta de aprobación conjunta](examples/text-classification/QUALIFICATION.md): casos funcionales y evaluación etiquetada antes de publicar, con un lanzador que exige la evidencia y distingue aprobaciones experimentales. Es una capa de aplicación para ese perfil; la API base del SDK mantiene sus contratos de aceptación funcional.
+El ejemplo incluido transforma texto para demostrar la API base. Una aplicación de clasificación debe añadir criterios y datos de evaluación propios en un proyecto independiente; los fixtures genéricos solo verifican el comportamiento declarado por el ejemplo.
 
 ## Instalación
 
@@ -176,8 +176,8 @@ El verificador registra diagnósticos de la ejecución original con códigos est
 
 Los fixtures negativos pueden declarar `expectErrorCode` junto a `expectError: true` para exigir una clase de error. Los ejemplos usan `SCHEMA_INVALID`; fallos de proceso, protocolo o presupuesto se distinguen. Sin ese campo, se conserva el comportamiento de cualquier error.
 
-El ejemplo de clasificación incluye un [generador con Ollama local](examples/text-classification/GENERATION.md). La IA propone código para tareas con contrato fijo; el circuito limita las correcciones a tres intentos, ejecuta las pruebas en Linux y aplica la calificación antes de publicar. No permite que el candidato cambie pruebas, permisos o criterios. Los datos ilustrativos siguen produciendo publicaciones experimentales.
+Una IA puede proponer fuentes de tareas mediante JSON. La política y los criterios externos deben permanecer bajo control de quien evalúa; el candidato no debe cambiarlos para aprobarse.
 
 ## Procedencia del motor
 
-El paquete local `packages/activepieces-engine-standalone-0.1.0.tgz` conserva los avisos y la licencia MIT de las fuentes extraídas de Activepieces, commit `2d5a47708c87e3ce17116d2d4b34d4d1208e8cd2`. Sus dependencias mantienen sus propias licencias bajo `node_modules/`. No se modificaron la plantilla distribuidora ni n8n.
+El paquete local `packages/activepieces-engine-standalone-0.1.0.tgz` conserva los avisos y la licencia MIT de las fuentes extraídas de Activepieces, commit `2d5a47708c87e3ce17116d2d4b34d4d1208e8cd2`. Sus dependencias mantienen sus propias licencias bajo `node_modules/`.

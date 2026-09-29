@@ -2,17 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { compareJSON, preview } from '../src/diagnostics.mjs';
 import { inspectValue, validateValue, compatible } from '../src/schema.mjs';
-import { applySources } from '../examples/text-classification/generation.mjs';
-import { readFile, mkdtemp, rm, mkdir, writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
-import { join } from 'node:path';
-import { generateAndQualify } from '../examples/text-classification/generation.mjs';
-import { buildRepairFeedback } from '../examples/text-classification/repair-feedback.mjs';
+import { readFile } from 'node:fs/promises';
 import { verify } from '../src/index.mjs';
-const root=new URL('../examples/text-classification/',import.meta.url);
-const spec=JSON.parse(await readFile(new URL('flow.json',root)));
-const policy=JSON.parse(await readFile(new URL('policy.json',root)));
-const criteria=JSON.parse(await readFile(new URL('evaluation-criteria.json',root)));
 test('field differences distinguish values, missing items, order and Unicode',()=>{
     assert.deepEqual(compareJSON({b:2,a:1},{a:1,b:2}).issues,[]);
     const result=compareJSON({categoria:'urgente',reglas:[],texto:'é','a/b':null},{categoria:'normal',reglas:['normal.sin_urgencia'],texto:'e\u0301'});
@@ -40,34 +31,6 @@ test('object enums ignore property insertion order and diagnostics are bounded',
     const result=compareJSON(Array(100).fill(0),Array(100).fill(1),3);
     assert.equal(result.issues.length,3); assert.equal(result.truncated,true);
     assert.equal(preview('x'.repeat(10000)).text.length,256);
-});
-test('source envelope errors identify fields and scoped repairs preserve good tasks',()=>{
-    assert.throws(()=>applySources(spec,'{"sources":[{"id":"unknown","source":"x"}]}'),error=>error.issues.some(issue=>issue.path==='/sources/0/id'));
-    assert.throws(()=>applySources(spec,'{"sources":[{"id":"normalizar","source":"x"}]}'),error=>error.issues.some(issue=>issue.code==='MISSING_TASK' && issue.expected==='clasificar'));
-    assert.throws(()=>applySources(spec,'not json'),error=>error.code==='JSON_INVALID');
-    const repaired=applySources(spec,JSON.stringify({sources:[{id:'clasificar',source:'module.exports=()=>({});'}]}),{taskIds:['clasificar'],requireAll:false});
-    assert.deepEqual(repaired.tasks[0],spec.tasks[0]);
-    assert.throws(()=>applySources(spec,JSON.stringify({sources:[{id:'normalizar',source:'x'}]}),{taskIds:['clasificar'],requireAll:false}));
-});
-test('duplicate task and flow differences group by responsible task',()=>{
-    const issue={code:'VALUE_MISMATCH',path:'/categoria',expected:'urgente',actual:'normal',hint:'Fix the value.'};
-    const report={criteria:{allCasesPassed:false},cases:[{scope:'task:clasificar',id:'urgente-explicita',passed:false,observed:{categoria:'normal'},diagnostic:{issues:[issue]}},
-        {scope:'flow',id:'urgente-servicio-caido',passed:false,observed:{categoria:'normal'},diagnostic:{issues:[issue]}}]};
-    const result=buildRepairFeedback(spec,policy,report);
-    assert.equal(result.groups.length,1);assert.equal(result.groups[0].caseCount,2);
-    assert.deepEqual(result.repairTaskIds,['clasificar']); assert(Buffer.byteLength(JSON.stringify(result))<32768);
-});
-test('repeated candidate stops before another verification or publication',async()=>{
-    const temporary=await mkdtemp(join(tmpdir(),'diagnostic-stalled-'));let checks=0;
-    const content=JSON.stringify({sources:spec.tasks.map(({id,source})=>({id,source}))});
-    try {
-        const result=await generateAndQualify({template:spec,policy,criteria,datasetText:'reserved',kind:'ilustrativo',outputDirectory:join(temporary,'run'),
-            provider:{identity:{fixture:true},async generate(){return {content};}},qualify:async args=>{
-                checks++;await mkdir(args.outputDirectory);await writeFile(join(args.outputDirectory,'functional.json'),JSON.stringify({criteria:{},cases:[{scope:'flow',id:'unknown',passed:false,error:null}]}));
-                return {status:'REJECTED',stage:'functional',artifactId:null};}});
-        assert.equal(result.status,'STALLED');assert.equal(checks,1);assert.equal(result.attempts.length,2);
-        assert.equal(result.attempts[1].feedback.code,'UNCHANGED_CANDIDATE');
-    } finally {await rm(temporary,{recursive:true,force:true});}
 });
 test('a process failure cannot satisfy an expected schema rejection', {skip:process.platform!=='linux'}, async()=>{
     const base=JSON.parse(await readFile(new URL('../examples/flow.json',import.meta.url)));

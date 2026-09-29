@@ -1,7 +1,0 @@
-{
-  "minAccuracy": 0.9,
-  "minUrgentRecall": 1.0,
-  "maxReviewRate": 0.5,
-  "minPerCategory": 2,
-  "maxRuntimeErrors": 0
-}

@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 from validate_okf_nodes import extract_frontmatter, parse_metadata
 
-TEMPLATE_VERSION = '0.4.5'
+TEMPLATE_VERSION = '0.4.6'
 
 
 REQUIRED = {
@@ -63,21 +63,8 @@ WORKFLOW_SDK_FILES = {
     'packages/activepieces-engine-standalone-0.1.0.tgz',
     'src/catalog.mjs', 'src/cli.mjs', 'src/definition.mjs', 'src/diagnostics.mjs', 'src/index.mjs',
     'src/lock-holder.cjs', 'src/runtime.mjs', 'src/sandbox.mjs', 'src/schema.mjs', 'src/worker.cjs',
-    'test/cli.test.mjs', 'test/diagnostics.test.mjs', 'test/evaluation.test.mjs',
-    'test/generation.test.mjs', 'test/qualification.test.mjs', 'test/sdk.test.mjs',
+    'test/cli.test.mjs', 'test/diagnostics.test.mjs', 'test/sdk.test.mjs',
     'examples/flow.json', 'examples/build-definition.mjs', 'examples/input.json', 'examples/policy.json',
-    'examples/text-classification/GENERATION.md', 'examples/text-classification/EVALUATION.md',
-    'examples/text-classification/QUALIFICATION.md', 'examples/text-classification/README.md',
-    'examples/text-classification/build-definition.mjs', 'examples/text-classification/csv_to_jsonl.py',
-    'examples/text-classification/dataset-ilustrativo.jsonl', 'examples/text-classification/evaluate.mjs',
-    'examples/text-classification/evaluation-criteria.json', 'examples/text-classification/evaluation.mjs',
-    'examples/text-classification/flow.json', 'examples/text-classification/generate-local.mjs',
-    'examples/text-classification/generation.mjs', 'examples/text-classification/input.json',
-    'examples/text-classification/policy.json', 'examples/text-classification/qualification.mjs',
-    'examples/text-classification/qualify.mjs', 'examples/text-classification/repair-feedback.mjs',
-    'examples/text-classification/run-demo.mjs', 'examples/text-classification/run-qualified.mjs',
-    'examples/text-classification/tasks/normalizar.cjs',
-    'examples/text-classification/tasks/clasificar.cjs',
 }
 
 
@@ -91,7 +78,7 @@ def main() -> int:
     allowed_files = REQUIRED | ALLOWED_EXTRA | {'extensions/workflow-sdk/' + path for path in WORKFLOW_SDK_FILES}
     for path in root.rglob('*'):
         relative = path.relative_to(root)
-        if '.git' in relative.parts or 'node_modules' in relative.parts or (relative.suffix == '.pyc' and '__pycache__' in relative.parts):
+        if '.git' in relative.parts or relative.parts[:3] == ('extensions', 'workflow-sdk', 'node_modules') or (relative.suffix == '.pyc' and '__pycache__' in relative.parts):
             continue
         if path.is_symlink():
             errors.append(f"Enlace simbólico no autorizado en plantilla: {relative.as_posix()}")

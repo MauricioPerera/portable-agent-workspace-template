@@ -334,7 +334,7 @@ class AcceptanceTests(unittest.TestCase):
     def test_template_rejects_unapproved_domain_files_outside_core(self):
         copy = self.copy_distribution(self.base / 'distribution')
         for relative in ('contracts/cliente-real.md', 'reports/cliente-real.json',
-                         'docs/casos/cliente-real.md', '.venv/cliente-real.txt',
+                         'docs/casos/cliente-real.md', 'context/node_modules/customer.json', '.venv/cliente-real.txt',
                          '__pycache__/cliente-real.txt'):
             with self.subTest(path=relative):
                 path = copy / relative

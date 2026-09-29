@@ -16,7 +16,7 @@ if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
     sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 
-VERSION = '0.4.5'
+VERSION = '0.4.6'
 RUNTIME = ('validate_okf_nodes.py', 'validate_workspace.py', 'first_run.py', 'check_first_run.py')
 
 def slugify(value):

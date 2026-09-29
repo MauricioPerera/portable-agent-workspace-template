@@ -1,6 +1,0 @@
-{"id":"eval-01","texto":"Necesito una respuesta inmediata.","categoria_esperada":"urgente"}
-{"id":"eval-02","texto":"No puedo trabajar desde hace minutos.","categoria_esperada":"urgente"}
-{"id":"eval-03","texto":"Adjunto documentación para la próxima semana.","categoria_esperada":"normal"}
-{"id":"eval-04","texto":"Cuando puedas, revisa mi solicitud.","categoria_esperada":"normal"}
-{"id":"eval-05","texto":"Tal vez haga falta priorizar este asunto.","categoria_esperada":"revisión"}
-{"id":"eval-06","texto":"Es urgente pero puede esperar hasta mañana.","categoria_esperada":"revisión"}
